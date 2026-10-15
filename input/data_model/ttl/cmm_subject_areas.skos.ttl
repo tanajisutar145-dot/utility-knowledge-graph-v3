@@ -1,0 +1,198 @@
+# Utility CMM-aligned Canonical Data Model (Silver) v1.0.0 | source: Databricks lakehouse-industry-data-models energy_utilities v1 ECM | generated 2026-10-13
+# SKOS concept scheme of CMM subject areas (schemas) and subdomains.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix cim: <http://iec.ch/TC57/CIM100#> .
+@prefix cmm: <http://www.utility-cmm.org/ontology/silver#> .
+@prefix cmmsa: <http://www.utility-cmm.org/ontology/silver/subject-area#> .
+
+
+<http://www.utility-cmm.org/ontology/silver/subject-areas> a owl:Ontology ; dcterms:title "Utility CMM subject areas"@en ; owl:versionInfo "1.0.0" .
+cmmsa:scheme a skos:ConceptScheme ; skos:prefLabel "Utility CMM subject areas"@en ;
+    skos:hasTopConcept cmmsa:asset , cmmsa:billing , cmmsa:compliance , cmmsa:customer , cmmsa:demand , cmmsa:distribution , cmmsa:finance , cmmsa:forecast , cmmsa:generation , cmmsa:grid , cmmsa:interconnection , cmmsa:metering , cmmsa:outage , cmmsa:renewable , cmmsa:supply , cmmsa:trading , cmmsa:transmission , cmmsa:workforce , cmmsa:gis , cmmsa:cmm_meta .
+
+cmmsa:asset a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Asset"@en ;
+    skos:definition "Utility asset lifecycle management including generation units, transmission towers, distribution poles, transformers, switchgear, protection relays, substation equipment, fleet vehicles, and facilities. Manages asset registry, condition assessments, work orders, preventive/corrective maintenance schedules, depreciation schedules, capital projects, spare parts inventory, and O&M cost tracking via Ventyx Asset Suite EAM. Supports CAPEX/OPEX planning and RAB valuation."@en ;
+    skos:scopeNote "CIM packages: IEC61968::Assets; IEC61968::Work; IEC61968::InfERPSupport | Standards: IEC 61968-4; IEC 61968-6; ISO 55000/55001; ISO 14224"@en ;
+    skos:narrower cmmsa:asset.asset_registry , cmmsa:asset.maintenance_operations , cmmsa:asset.project_finance .
+cmmsa:asset.asset_registry a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:asset ; skos:prefLabel "Asset Registry"@en .
+cmmsa:asset.maintenance_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:asset ; skos:prefLabel "Maintenance Operations"@en .
+cmmsa:asset.project_finance a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:asset ; skos:prefLabel "Project Finance"@en .
+
+cmmsa:billing a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Billing"@en ;
+    skos:definition "SSOT for all revenue cycle data — rate schedules, tariff structures, invoice generation, payment processing, collections, dunning, payment arrangements, deposit management, and revenue recognition. Manages TOU, CPP, and tiered rate calculations, budget billing plans, and financial adjustments within SAP IS-U FICA and Oracle CC&B. Owns accounts receivable ledger entries, write-offs, and dispute resolution supporting SOX financial controls."@en ;
+    skos:scopeNote "CIM packages: IEC61968::Customers; IEC61968::PaymentMetering; IEC61968::InfCustomers | Standards: IEC 61968-8; IEC 61968-10; FERC USoA; ASC 606; NAESB REQ.21 ESPI"@en ;
+    skos:narrower cmmsa:billing.invoice_processing , cmmsa:billing.payment_collections , cmmsa:billing.rate_management , cmmsa:billing.revenue_recognition .
+cmmsa:billing.invoice_processing a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:billing ; skos:prefLabel "Invoice Processing"@en .
+cmmsa:billing.payment_collections a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:billing ; skos:prefLabel "Payment Collections"@en .
+cmmsa:billing.rate_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:billing ; skos:prefLabel "Rate Management"@en .
+cmmsa:billing.revenue_recognition a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:billing ; skos:prefLabel "Revenue Recognition"@en .
+
+cmmsa:compliance a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Compliance"@en ;
+    skos:definition "Regulatory compliance management including NERC CIP audits, FERC reporting, PUC rate cases, environmental permits, emissions reporting to EPA, reliability standards documentation, SOX controls, and CPCN applications. Manages compliance obligations, audit trails, regulatory filings, evidence collection, enforcement action records, and regulatory correspondence. Serves as SSOT for compliance posture reporting to the Board and external regulators."@en ;
+    skos:scopeNote "CIM packages: IEC61968::Common (Document/ActivityRecord extensions) | Standards: NERC Reliability Standards (CIP, PRC, TOP, BAL, EOP); FERC; EPA 40 CFR Part 75; SOX 404"@en ;
+    skos:narrower cmmsa:compliance.audit_management , cmmsa:compliance.regulatory_reporting , cmmsa:compliance.security_controls .
+cmmsa:compliance.audit_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:compliance ; skos:prefLabel "Audit Management"@en .
+cmmsa:compliance.regulatory_reporting a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:compliance ; skos:prefLabel "Regulatory Reporting"@en .
+cmmsa:compliance.security_controls a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:compliance ; skos:prefLabel "Security Controls"@en .
+
+cmmsa:customer a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Customer"@en ;
+    skos:definition "SSOT for all customer identity, account, and relationship data across residential, commercial, and industrial segments. Manages customer profiles, service agreements, premises, contact information, premise-to-account linkages, credit classifications, and multi-channel engagement history within CIS platforms (SAP IS-U, Oracle CC&B). Supports NEM participants, BTM customers, and DER-enrolled accounts. Central reference for all downstream billing, metering, and demand response domains."@en ;
+    skos:scopeNote "CIM packages: IEC61968::Customers; IEC61968::Common | Standards: IEC 61968-8; NAESB REQ.21 ESPI (Green Button); MultiSpeak CB"@en ;
+    skos:narrower cmmsa:customer.account_management , cmmsa:customer.customer_engagement , cmmsa:customer.service_delivery .
+cmmsa:customer.account_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:customer ; skos:prefLabel "Account Management"@en .
+cmmsa:customer.customer_engagement a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:customer ; skos:prefLabel "Customer Engagement"@en .
+cmmsa:customer.service_delivery a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:customer ; skos:prefLabel "Service Delivery"@en .
+
+cmmsa:demand a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Demand"@en ;
+    skos:definition "Demand response programs, load curtailment events, CPP and TOU rate programs, direct load control, behavioral demand response, aggregator management, and customer incentive payments. Manages DR event dispatch, baseline calculations, measurement and verification, interruptible tariff agreements, VPP dispatch records, and integration with wholesale market DR products. Serves as SSOT for enrolled load capacity and program performance reporting to ISO/RTO and PUC."@en ;
+    skos:scopeNote "CIM packages: IEC61968::Metering (DemandResponseProgram, EndDeviceControl); IEC61968-5 DER | Standards: IEC 61968-9; IEC 61968-5; OpenADR 2.0b; IEEE 2030.5; FERC Order 2222; NAESB WEQ-015"@en ;
+    skos:narrower cmmsa:demand.enrollment_operations , cmmsa:demand.event_execution , cmmsa:demand.program_management .
+cmmsa:demand.enrollment_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:demand ; skos:prefLabel "Enrollment Operations"@en .
+cmmsa:demand.event_execution a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:demand ; skos:prefLabel "Event Execution"@en .
+cmmsa:demand.program_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:demand ; skos:prefLabel "Program Management"@en .
+
+cmmsa:distribution a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Distribution"@en ;
+    skos:definition "Medium- and low-voltage distribution network operations including feeders, poles, transformers, service drops, sectionalizing devices, FLISR automation, volt-VAR optimization, and last-mile delivery to customer premises. Manages distribution grid topology, load balancing, DMS/ADMS integration via GE PowerOn ADMS and Esri ArcGIS Utility Network. Tracks SAIDI, SAIFI, and CAIDI reliability indices for PUC reporting."@en ;
+    skos:scopeNote "CIM packages: IEC61970::Core; IEC61970::Wires; IEC61968::Operations | Standards: IEC 61968-13 CDPSM; IEC 61968-3; IEEE 1366; Esri ArcGIS Utility Network; MultiSpeak"@en ;
+    skos:narrower cmmsa:distribution.asset_management , cmmsa:distribution.network_operations , cmmsa:distribution.reliability_planning .
+cmmsa:distribution.asset_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:distribution ; skos:prefLabel "Asset Management"@en .
+cmmsa:distribution.network_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:distribution ; skos:prefLabel "Network Operations"@en .
+cmmsa:distribution.reliability_planning a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:distribution ; skos:prefLabel "Reliability Planning"@en .
+
+cmmsa:finance a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Finance"@en ;
+    skos:definition "Corporate financial management including general ledger, accounts payable and receivable, capital budgeting, CAPEX and OPEX tracking, regulatory asset base (RAB) valuations, WACC calculations, EBITDA reporting, rate case financial models, ROE filings, depreciation, FERC account codes, cost allocation, and SOX-compliant financial controls within SAP S/4HANA FI/CO. Distinct from billing (customer revenue) — owns enterprise-level financial consolidation and treasury."@en ;
+    skos:scopeNote "CIM packages: IEC61968::InfERPSupport; IEC61968::InfWork | Standards: IEC 61968-10; FERC USoA (18 CFR Part 101); US GAAP (ASC 980, 740); SOX 404"@en ;
+    skos:narrower cmmsa:finance.asset_accounting , cmmsa:finance.cost_control , cmmsa:finance.regulatory_reporting , cmmsa:finance.revenue_operations .
+cmmsa:finance.asset_accounting a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:finance ; skos:prefLabel "Asset Accounting"@en .
+cmmsa:finance.cost_control a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:finance ; skos:prefLabel "Cost Control"@en .
+cmmsa:finance.regulatory_reporting a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:finance ; skos:prefLabel "Regulatory Reporting"@en .
+cmmsa:finance.revenue_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:finance ; skos:prefLabel "Revenue Operations"@en .
+
+cmmsa:forecast a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Forecast"@en ;
+    skos:definition "Load forecasting, generation forecasting, renewable intermittency prediction, peak demand planning, weather correlation analysis, and long-term capacity planning. Manages short-term operational forecasts, seasonal planning, and IRP scenario modeling for resource adequacy and grid reliability. Supports operational decision-making for dispatch, procurement, and infrastructure investment."@en ;
+    skos:scopeNote "CIM packages: IEC61970::LoadModel; IEC61970::Core (schedules); IEC61968::Environmental | Standards: IEC 61968-5 (DERGroupForecast); NERC MOD-031; ISO 8601"@en ;
+    skos:narrower cmmsa:forecast.generation_modeling , cmmsa:forecast.load_forecasting , cmmsa:forecast.resource_planning .
+cmmsa:forecast.generation_modeling a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:forecast ; skos:prefLabel "Generation Modeling"@en .
+cmmsa:forecast.load_forecasting a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:forecast ; skos:prefLabel "Load Forecasting"@en .
+cmmsa:forecast.resource_planning a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:forecast ; skos:prefLabel "Resource Planning"@en .
+
+cmmsa:generation a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Generation"@en ;
+    skos:definition "Power generation from conventional and renewable sources including CCGT, coal, nuclear, hydro, wind, solar, and biomass facilities. Manages plant operations, unit commitment, dispatch schedules, heat rate optimization, fuel inventory, emissions monitoring, and generation capacity planning. Core SCADA/DCS integration point for real-time generation telemetry via ABB Ability Symphony Plus. Supports IRP, LCOE analysis, and CAPEX planning for generation fleet."@en ;
+    skos:scopeNote "CIM packages: IEC61970::Generation::Production; IEC61970::Core | Standards: NERC GADS; EPA CEMS (40 CFR Part 75); EIA-860/923; IEC 62325-301"@en ;
+    skos:narrower cmmsa:generation.fuel_management , cmmsa:generation.generation_assets , cmmsa:generation.operations_scheduling .
+cmmsa:generation.fuel_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:generation ; skos:prefLabel "Fuel Management"@en .
+cmmsa:generation.generation_assets a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:generation ; skos:prefLabel "Generation Assets"@en .
+cmmsa:generation.operations_scheduling a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:generation ; skos:prefLabel "Operations Scheduling"@en .
+
+cmmsa:grid a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Grid"@en ;
+    skos:definition "Real-time grid operations including EMS, SCADA telemetry, state estimation, contingency analysis, automatic generation control, load forecasting, system balancing, frequency regulation, and voltage control. Manages grid stability, coordination with balancing authorities, switching orders, and OSIsoft PI historian data integration for operational analytics and post-event review. Supports NERC BAL and TOP reliability standards."@en ;
+    skos:scopeNote "CIM packages: IEC61970::Meas; IEC61970::SCADA; IEC61970::ControlArea; IEC61970::Contingency; IEC61970::StateVariables; IEC61970::OperationalLimits; IEC61970::Topology | Standards: IEC 61970-452/456 (CGMES); IEC 60870-6 ICCP; IEEE C37.118; NERC BAL/TOP/IRO"@en ;
+    skos:narrower cmmsa:grid.asset_control , cmmsa:grid.market_scheduling , cmmsa:grid.network_operations , cmmsa:grid.reliability_management .
+cmmsa:grid.asset_control a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:grid ; skos:prefLabel "Asset Control"@en .
+cmmsa:grid.market_scheduling a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:grid ; skos:prefLabel "Market Scheduling"@en .
+cmmsa:grid.network_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:grid ; skos:prefLabel "Network Operations"@en .
+cmmsa:grid.reliability_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:grid ; skos:prefLabel "Reliability Management"@en .
+
+cmmsa:interconnection a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Interconnection"@en ;
+    skos:definition "Customer and third-party interconnection requests for distributed generation, solar installations, battery storage, EV chargers, and other BTM resources. Manages interconnection applications, technical reviews, impact studies, POI specifications, NEM agreements, queue management, and SGIP compliance for DER integration. Distinct from renewable (resource management) — focuses on the application and approval process for grid connection."@en ;
+    skos:scopeNote "CIM packages: IEC61970::Wires (PowerElectronicsConnection); IEC61968::InfWork | Standards: IEEE 1547-2018; UL 1741 SB; FERC Order 2023; FERC Order 2222; IEC 61968-5"@en ;
+    skos:narrower cmmsa:interconnection.agreement_finance , cmmsa:interconnection.application_management , cmmsa:interconnection.technical_review .
+cmmsa:interconnection.agreement_finance a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:interconnection ; skos:prefLabel "Agreement Finance"@en .
+cmmsa:interconnection.application_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:interconnection ; skos:prefLabel "Application Management"@en .
+cmmsa:interconnection.technical_review a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:interconnection ; skos:prefLabel "Technical Review"@en .
+
+cmmsa:metering a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Metering"@en ;
+    skos:definition "Advanced metering infrastructure including smart meters, interval data collection, AMI head-end systems, meter reading schedules, VEE (Validation, Estimation, and Editing) processes, TOU and CPP rate programs, and meter asset lifecycle. Manages meter-to-cash data flow, MDM integration via Oracle Utilities MDM, and raw/validated interval data streams feeding billing, demand response, and grid operations domains."@en ;
+    skos:scopeNote "CIM packages: IEC61968::Metering; IEC61968::PaymentMetering | Standards: IEC 61968-9; ANSI C12.19/C12.22; IEC 62056 DLMS/COSEM; NAESB REQ.21 ESPI"@en ;
+    skos:narrower cmmsa:metering.ami_operations , cmmsa:metering.interval_processing , cmmsa:metering.meter_management .
+cmmsa:metering.ami_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:metering ; skos:prefLabel "Ami Operations"@en .
+cmmsa:metering.interval_processing a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:metering ; skos:prefLabel "Interval Processing"@en .
+cmmsa:metering.meter_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:metering ; skos:prefLabel "Meter Management"@en .
+
+cmmsa:outage a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Outage"@en ;
+    skos:definition "Outage management including unplanned interruptions, planned maintenance windows, storm response, crew dispatch, restoration prioritization, customer notifications, SAIDI/SAIFI/CAIDI tracking, and OMS integration. Manages outage events, switching orders, service restoration workflows, and reliability performance reporting. Distinct from grid domain (real-time control) — focuses on event lifecycle and restoration coordination."@en ;
+    skos:scopeNote "CIM packages: IEC61968::Operations; IEC61968::Customers | Standards: IEC 61968-3; IEEE 1366; MultiSpeak OD/OA; EEI Mutual Assistance"@en ;
+    skos:narrower cmmsa:outage.customer_communication , cmmsa:outage.outage_management , cmmsa:outage.restoration_operations .
+cmmsa:outage.customer_communication a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:outage ; skos:prefLabel "Customer Communication"@en .
+cmmsa:outage.outage_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:outage ; skos:prefLabel "Outage Management"@en .
+cmmsa:outage.restoration_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:outage ; skos:prefLabel "Restoration Operations"@en .
+
+cmmsa:renewable a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Renewable"@en ;
+    skos:definition "Renewable energy resource management including utility-scale wind farms, solar arrays, battery storage, and hydroelectric facilities. Manages DER registration, DERMS integration, REC issuance and retirement, RPS compliance portfolios, renewable generation forecasting, curtailment management, BTM generation tracking, NEM credits, and VPP aggregation configurations. Supports state renewable portfolio standards and clean energy mandates."@en ;
+    skos:scopeNote "CIM packages: IEC61970::Wires (PowerElectronics); IEC61968-5 DER; IEC62325::MarketResults | Standards: IEC 61968-5; IEEE 1547; IEEE 2030.5; WREGIS/M-RETS/PJM-GATS"@en ;
+    skos:narrower cmmsa:renewable.asset_management , cmmsa:renewable.contract_administration , cmmsa:renewable.grid_operations , cmmsa:renewable.program_incentives .
+cmmsa:renewable.asset_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:renewable ; skos:prefLabel "Asset Management"@en .
+cmmsa:renewable.contract_administration a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:renewable ; skos:prefLabel "Contract Administration"@en .
+cmmsa:renewable.grid_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:renewable ; skos:prefLabel "Grid Operations"@en .
+cmmsa:renewable.program_incentives a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:renewable ; skos:prefLabel "Program Incentives"@en .
+
+cmmsa:supply a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Supply"@en ;
+    skos:definition "Utility supply chain including materials management, procurement of transformers, conductors, meters, poles, generation spare parts, fuel supply contracts (gas, coal, uranium), vendor management, inventory warehouses, and logistics. Manages purchase orders, supplier contracts, spare parts catalog, warehouse stock levels, and emergency restoration supply chain within SAP S/4HANA MM. Supports T&D construction material sourcing and supply chain resilience."@en ;
+    skos:scopeNote "CIM packages: IEC61968::InfERPSupport; IEC61968::Assets | Standards: IEC 61968-10; UNSPSC; ISO 8000 (master data)"@en ;
+    skos:narrower cmmsa:supply.inventory_control , cmmsa:supply.procurement_operations , cmmsa:supply.vendor_management .
+cmmsa:supply.inventory_control a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:supply ; skos:prefLabel "Inventory Control"@en .
+cmmsa:supply.procurement_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:supply ; skos:prefLabel "Procurement Operations"@en .
+cmmsa:supply.vendor_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:supply ; skos:prefLabel "Vendor Management"@en .
+
+cmmsa:trading a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Trading"@en ;
+    skos:definition "Wholesale energy trading, power purchase agreements, bilateral contracts, day-ahead and real-time market participation, LMP pricing, scheduling coordinators, ancillary services procurement, and ETRM position management via OpenLink Endur. Manages market settlements, congestion revenue rights, FTR holdings, counterparty credit exposure, REC tracking, and ISO/RTO interface for energy transactions. Supports FERC market reporting and NAESB scheduling."@en ;
+    skos:scopeNote "CIM packages: IEC62325::MarketCommon; IEC62325::ParticipantInterfaces; IEC62325::MarketResults; IEC62325::ReferenceData; IEC62325::CongestionRevenueRights | Standards: IEC 62325-301; IEC 62325-351; NAESB WEQ; FERC EQR; EEI/ISDA Master Agreements"@en ;
+    skos:narrower cmmsa:trading.asset_holdings , cmmsa:trading.market_operations , cmmsa:trading.risk_management , cmmsa:trading.trade_execution .
+cmmsa:trading.asset_holdings a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:trading ; skos:prefLabel "Asset Holdings"@en .
+cmmsa:trading.market_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:trading ; skos:prefLabel "Market Operations"@en .
+cmmsa:trading.risk_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:trading ; skos:prefLabel "Risk Management"@en .
+cmmsa:trading.trade_execution a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:trading ; skos:prefLabel "Trade Execution"@en .
+
+cmmsa:transmission a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Transmission"@en ;
+    skos:definition "High-voltage bulk power transmission network operations including substations, transmission lines, transformers, circuit breakers, ATC calculations, congestion management, OATT compliance, and interconnection with RTOs/ISOs. Manages transmission rights, FTR positions, power flow models, NERC reliability coordination, and FERC transmission reporting. Integrates with EMS and SCADA for real-time grid state."@en ;
+    skos:scopeNote "CIM packages: IEC61970::Core; IEC61970::Wires; IEC61970::Protection; IEC62325::ReferenceData | Standards: IEC 61970-452/456 (CGMES); NERC FAC/MOD/TPL/PRC; FERC OATT (Orders 888/890)"@en ;
+    skos:narrower cmmsa:transmission.asset_management , cmmsa:transmission.planning_studies , cmmsa:transmission.service_operations .
+cmmsa:transmission.asset_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:transmission ; skos:prefLabel "Asset Management"@en .
+cmmsa:transmission.planning_studies a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:transmission ; skos:prefLabel "Planning Studies"@en .
+cmmsa:transmission.service_operations a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:transmission ; skos:prefLabel "Service Operations"@en .
+
+cmmsa:workforce a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Workforce"@en ;
+    skos:definition "Utility workforce management including field crews, linemen, plant operators, engineers, dispatchers, meter readers, and administrative staff. Manages employee records, certifications (NERC CIP personnel risk assessments), OSHA safety compliance, union agreements, crew scheduling, time and attendance, contractor workforce, and labor cost allocations to work orders. Serves as SSOT for personnel identity referenced by asset maintenance, grid operations, and compliance domains."@en ;
+    skos:scopeNote "CIM packages: IEC61968::Common (Crew, Person); IEC61968::InfERPSupport (ErpPersonnel); IEC61968::InfWork | Standards: IEC 61968-6; IEC 61968-10; OSHA 29 CFR 1910.269; NERC CIP-004; DOT 49 CFR Part 40"@en ;
+    skos:narrower cmmsa:workforce.cost_allocation , cmmsa:workforce.safety_compliance , cmmsa:workforce.talent_management , cmmsa:workforce.workforce_scheduling .
+cmmsa:workforce.cost_allocation a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:workforce ; skos:prefLabel "Cost Allocation"@en .
+cmmsa:workforce.safety_compliance a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:workforce ; skos:prefLabel "Safety Compliance"@en .
+cmmsa:workforce.talent_management a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:workforce ; skos:prefLabel "Talent Management"@en .
+cmmsa:workforce.workforce_scheduling a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:broader cmmsa:workforce ; skos:prefLabel "Workforce Scheduling"@en .
+
+cmmsa:gis a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Gis"@en ;
+    skos:definition "CMM GIS / spatial subject area: CIM Location, PositionPoint and CoordinateSystem, CIM network topology (ConnectivityNode, Terminal), geographical regions and the Esri ArcGIS Utility Network feature/association model. Single source of geometry for every locatable canonical entity."@en ;
+    skos:scopeNote "CIM packages: IEC61968::Common (Location, PositionPoint, CoordinateSystem); IEC61970::Topology; IEC61970::Core | Standards: OGC GeoSPARQL 1.1; ISO 19125 Simple Features; ISO 19111/EPSG; Esri ArcGIS Utility Network; H3"@en .
+
+cmmsa:cmm_meta a skos:Concept ; skos:inScheme cmmsa:scheme ; skos:topConceptOf cmmsa:scheme ;
+    skos:prefLabel "Cmm Meta"@en ;
+    skos:definition "CMM model metadata registry (ISO/IEC 11179 style): CIM class registry, canonical entity/attribute registries, relationships, enumerations, source lineage and data-quality results."@en ;
+    skos:scopeNote "CIM packages:  | Standards: ISO/IEC 11179 (metadata registry)"@en .
+

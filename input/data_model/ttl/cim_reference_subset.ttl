@@ -1,0 +1,3198 @@
+# Utility CMM-aligned Canonical Data Model (Silver) v1.0.0 | source: Databricks lakehouse-industry-data-models energy_utilities v1 ECM | generated 2026-10-13
+# Subset of the IEC TC57 CIM (CIM100 namespace) referenced by the CMM canonical model, so that the ontology is self-contained.
+# Normative source: IEC 61970-301, IEC 61968-11, IEC 62325-301 UML (CIM Users Group). Definitions abridged.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix cim: <http://iec.ch/TC57/CIM100#> .
+@prefix cmm: <http://www.utility-cmm.org/ontology/silver#> .
+@prefix cmmsa: <http://www.utility-cmm.org/ontology/silver/subject-area#> .
+
+
+<http://www.utility-cmm.org/ontology/cim-subset> a owl:Ontology ; dcterms:title "IEC CIM subset referenced by the Utility CMM"@en ; owl:versionInfo "CIM100 (CIM17) subset for CMM 1.0.0" .
+
+cim:ACDCTerminal a owl:Class ;
+    rdfs:label "ACDCTerminal"@en ;
+    rdfs:comment "An electrical connection point (AC or DC) to a piece of conducting equipment."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:ACLineSegment a owl:Class ;
+    rdfs:label "ACLineSegment"@en ;
+    rdfs:comment "A wire or combination of wires used to carry AC current between points in the power system."@en ;
+    rdfs:subClassOf cim:ConductingEquipment ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:ActivityRecord a owl:Class ;
+    rdfs:label "ActivityRecord"@en ;
+    rdfs:comment "Records activity for an entity at a point in time."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Agreement a owl:Class ;
+    rdfs:label "Agreement"@en ;
+    rdfs:comment "Formal agreement between two parties defining the terms and conditions for a set of services."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:AnalogValue a owl:Class ;
+    rdfs:label "AnalogValue"@en ;
+    rdfs:comment "AnalogValue represents an analog MeasurementValue."@en ;
+    rdfs:subClassOf cim:MeasurementValue ;
+    cmm:cimPackage "IEC61970::Meas" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:AncillaryServiceClearing a owl:Class ;
+    rdfs:label "AncillaryServiceClearing"@en ;
+    rdfs:comment "Model of results of market clearing with respect to ancillary service products."@en ;
+    cmm:cimPackage "IEC62325::MarketResults" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:Asset a owl:Class ;
+    rdfs:label "Asset"@en ;
+    rdfs:comment "Tangible resource of the utility, including power system equipment, cabinets, buildings, etc."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:AssetContainer a owl:Class ;
+    rdfs:label "AssetContainer"@en ;
+    rdfs:comment "Asset that is aggregation of other assets such as conductors, transformers, switchgear, land, fences, buildings."@en ;
+    rdfs:subClassOf cim:Asset ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:AssetInfo a owl:Class ;
+    rdfs:label "AssetInfo"@en ;
+    rdfs:comment "Set of attributes of an asset, representing typical datasheet information of a physical device."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Assignment a owl:Class ;
+    rdfs:label "Assignment"@en ;
+    rdfs:comment "An assignment is given to an ErpPerson, Crew, Organisation, Equipment Item, Tool, etc."@en ;
+    rdfs:subClassOf cim:Agreement ;
+    cmm:cimPackage "IEC61968::InfWork" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-6" .
+
+cim:AuxiliaryAccount a owl:Class ;
+    rdfs:label "AuxiliaryAccount"@en ;
+    rdfs:comment "Variable and dynamic part of auxiliary agreement (deposit, arrears)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::PaymentMetering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:AuxiliaryAgreement a owl:Class ;
+    rdfs:label "AuxiliaryAgreement"@en ;
+    rdfs:comment "An ad-hoc agreement for payment of debt / payment arrangement."@en ;
+    rdfs:subClassOf cim:Agreement ;
+    cmm:cimPackage "IEC61968::PaymentMetering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:BaseReading a owl:Class ;
+    rdfs:label "BaseReading"@en ;
+    rdfs:comment "Common representation for reading values."@en ;
+    rdfs:subClassOf cim:MeasurementValue ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:BaseVoltage a owl:Class ;
+    rdfs:label "BaseVoltage"@en ;
+    rdfs:comment "Defines a system base voltage referenced by equipment."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:BasicIntervalSchedule a owl:Class ;
+    rdfs:label "BasicIntervalSchedule"@en ;
+    rdfs:comment "Schedule of values at points in time."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:BatteryUnit a owl:Class ;
+    rdfs:label "BatteryUnit"@en ;
+    rdfs:comment "An electrochemical energy storage device (PowerElectronicsUnit)."@en ;
+    rdfs:subClassOf cim:Equipment ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Bid a owl:Class ;
+    rdfs:label "Bid"@en ;
+    rdfs:comment "Represents both bids to purchase and offers to sell energy or ancillary services in an RTO-sponsored market."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC62325::ParticipantInterfaces" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:CRR a owl:Class ;
+    rdfs:label "CRR"@en ;
+    rdfs:comment "Congestion Revenue Rights (FTR / CRR)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC62325::CongestionRevenueRights" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:Charge a owl:Class ;
+    rdfs:label "Charge"@en ;
+    rdfs:comment "A charge element associated with other entities such as tariff structures, auxiliary agreements or other charge elements."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::PaymentMetering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ClearanceDocument a owl:Class ;
+    rdfs:label "ClearanceDocument"@en ;
+    rdfs:comment "Safety document used to authorise work on conducting equipment in the field (SafetyDocument)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:ConductingEquipment a owl:Class ;
+    rdfs:label "ConductingEquipment"@en ;
+    rdfs:comment "Equipment that carries current and is connected via Terminals."@en ;
+    rdfs:subClassOf cim:Equipment ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Conductor a owl:Class ;
+    rdfs:label "Conductor"@en ;
+    rdfs:comment "Combination of conducting material with consistent electrical characteristics."@en ;
+    rdfs:subClassOf cim:ConductingEquipment ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:ConformLoadSchedule a owl:Class ;
+    rdfs:label "ConformLoadSchedule"@en ;
+    rdfs:comment "A curve of load versus time (X-axis) showing the active power values (Y1-axis) and reactive power (Y2-axis)."@en ;
+    rdfs:subClassOf cim:RegularIntervalSchedule ;
+    cmm:cimPackage "IEC61970::LoadModel" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:ConnectivityNode a owl:Class ;
+    rdfs:label "ConnectivityNode"@en ;
+    rdfs:comment "Connectivity nodes are points where terminals of conducting equipment are connected with zero impedance."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:ConnectivityNodeContainer a owl:Class ;
+    rdfs:label "ConnectivityNodeContainer"@en ;
+    rdfs:comment "Base class for all objects that may contain connectivity nodes or topological nodes."@en ;
+    rdfs:subClassOf cim:PowerSystemResource ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Contingency a owl:Class ;
+    rdfs:label "Contingency"@en ;
+    rdfs:comment "An event threatening system reliability, consisting of one or more contingency elements."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Contingency" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:ContingencyEquipment a owl:Class ;
+    rdfs:label "ContingencyEquipment"@en ;
+    rdfs:comment "A equipment to which the in service status is to change, such as a power transformer or AC line segment."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Contingency" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:ControlArea a owl:Class ;
+    rdfs:label "ControlArea"@en ;
+    rdfs:comment "A control area is a grouping of generating units and/or loads and a cutset of tie lines (balancing authority area)."@en ;
+    rdfs:subClassOf cim:PowerSystemResource ;
+    cmm:cimPackage "IEC61970::ControlArea" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:CoordinateSystem a owl:Class ;
+    rdfs:label "CoordinateSystem"@en ;
+    rdfs:comment "Coordinate reference system (CRS urn, e.g. EPSG)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Crew a owl:Class ;
+    rdfs:label "Crew"@en ;
+    rdfs:comment "Group of people with specific skills, tools, and vehicles."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:CrewMember a owl:Class ;
+    rdfs:label "CrewMember"@en ;
+    rdfs:comment "Member of a crew (OperationPersonRole)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Curve a owl:Class ;
+    rdfs:label "Curve"@en ;
+    rdfs:comment "A multi-purpose curve or functional relationship between an independent and dependent variables."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Customer a owl:Class ;
+    rdfs:label "Customer"@en ;
+    rdfs:comment "Organisation receiving services from service supplier."@en ;
+    rdfs:subClassOf cim:OrganisationRole ;
+    cmm:cimPackage "IEC61968::Customers" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:CustomerAccount a owl:Class ;
+    rdfs:label "CustomerAccount"@en ;
+    rdfs:comment "Assignment of a group of products and services purchased by the customer through a customer agreement."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Customers" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:CustomerAgreement a owl:Class ;
+    rdfs:label "CustomerAgreement"@en ;
+    rdfs:comment "Agreement between the customer and the service supplier to pay for service at a specific service location."@en ;
+    rdfs:subClassOf cim:Agreement ;
+    cmm:cimPackage "IEC61968::Customers" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:CustomerBillingInfo a owl:Class ;
+    rdfs:label "CustomerBillingInfo"@en ;
+    rdfs:comment "The creation of the monthly customer billing statements."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfCustomers" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:CustomerNotification a owl:Class ;
+    rdfs:label "CustomerNotification"@en ;
+    rdfs:comment "Conditions for notifying the customer about the changes in the status of their service (e.g., outage restore)."@en ;
+    cmm:cimPackage "IEC61968::Customers" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:DERGroupDispatch a owl:Class ;
+    rdfs:label "DERGroupDispatch"@en ;
+    rdfs:comment "Dispatch instruction issued to a DER group."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::DER" ;
+    cmm:cimStandard "IEC 61968-5" .
+
+cim:DateTimeInterval a owl:Class ;
+    rdfs:label "DateTimeInterval"@en ;
+    rdfs:comment "Interval between two date and time points."@en ;
+    cmm:cimPackage "IEC61970::Domain" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:DemandResponseProgram a owl:Class ;
+    rdfs:label "DemandResponseProgram"@en ;
+    rdfs:comment "Demand response program."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:Document a owl:Class ;
+    rdfs:label "Document"@en ;
+    rdfs:comment "Parent class for different groupings of information collected and managed as a part of a business process."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:ElectronicAddress a owl:Class ;
+    rdfs:label "ElectronicAddress"@en ;
+    rdfs:comment "Electronic address information (email, web, user id)."@en ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:EmissionAccount a owl:Class ;
+    rdfs:label "EmissionAccount"@en ;
+    rdfs:comment "Accounts for tracking emissions usage and credits for thermal generating units."@en ;
+    rdfs:subClassOf cim:Curve ;
+    cmm:cimPackage "IEC61970::Generation::Production" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:EndDevice a owl:Class ;
+    rdfs:label "EndDevice"@en ;
+    rdfs:comment "Asset container that performs one or more end device functions."@en ;
+    rdfs:subClassOf cim:AssetContainer ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:EndDeviceControl a owl:Class ;
+    rdfs:label "EndDeviceControl"@en ;
+    rdfs:comment "Instructs an end device to perform a specified action (incl. demand response)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:EndDeviceEvent a owl:Class ;
+    rdfs:label "EndDeviceEvent"@en ;
+    rdfs:comment "Event detected by a device function associated with the end device."@en ;
+    rdfs:subClassOf cim:ActivityRecord ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:EndDeviceGroup a owl:Class ;
+    rdfs:label "EndDeviceGroup"@en ;
+    rdfs:comment "Abstraction for management of group communications within a two-way AMR system or DER group."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-5" .
+
+cim:EnergyTransaction a owl:Class ;
+    rdfs:label "EnergyTransaction"@en ;
+    rdfs:comment "Specifies the schedule for energy transfers between interchange areas (e-Tag / interchange)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC62325::InfEnergyScheduling" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:EnvironmentalAnalog a owl:Class ;
+    rdfs:label "EnvironmentalAnalog"@en ;
+    rdfs:comment "Analog (float) measuring an environmental condition (observation or forecast)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Environmental" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Equipment a owl:Class ;
+    rdfs:label "Equipment"@en ;
+    rdfs:comment "Parts of the power system that are physical devices, electronic or mechanical."@en ;
+    rdfs:subClassOf cim:PowerSystemResource ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:EquipmentContainer a owl:Class ;
+    rdfs:label "EquipmentContainer"@en ;
+    rdfs:comment "A modelling construct to provide a root class for containing equipment."@en ;
+    rdfs:subClassOf cim:ConnectivityNodeContainer ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:ErpBankAccount a owl:Class ;
+    rdfs:label "ErpBankAccount"@en ;
+    rdfs:comment "Relationship under a particular name, usually evidenced by a deposit book, between a bank and an account holder."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpChartOfAccounts a owl:Class ;
+    rdfs:label "ErpChartOfAccounts"@en ;
+    rdfs:comment "Accounting structure of a business (general ledger accounts)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpCompetency a owl:Class ;
+    rdfs:label "ErpCompetency"@en ;
+    rdfs:comment "Information that relates to skills, competency, qualifications of personnel."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpInventory a owl:Class ;
+    rdfs:label "ErpInventory"@en ;
+    rdfs:comment "Utility inventory-related information about an item or part (and not for description of the item and its attributes)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpInventoryCount a owl:Class ;
+    rdfs:label "ErpInventoryCount"@en ;
+    rdfs:comment "This is related to Inventory physical counts organized by AssetModel."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpInvoiceLineItem a owl:Class ;
+    rdfs:label "ErpInvoiceLineItem"@en ;
+    rdfs:comment "An individual line item on an invoice."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpIssueInventory a owl:Class ;
+    rdfs:label "ErpIssueInventory"@en ;
+    rdfs:comment "Can be used to request an application to process an issue or request information about an issue (goods issue)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpItemMaster a owl:Class ;
+    rdfs:label "ErpItemMaster"@en ;
+    rdfs:comment "Any unique purchased part for manufactured product tracked by ERP systems for a utility (material master)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpJournal a owl:Class ;
+    rdfs:label "ErpJournal"@en ;
+    rdfs:comment "Book for recording accounting transactions as they occur."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpJournalEntry a owl:Class ;
+    rdfs:label "ErpJournalEntry"@en ;
+    rdfs:comment "Details of an individual entry in a journal, which is to be posted to a ledger on the posting date."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpLedgerBudget a owl:Class ;
+    rdfs:label "ErpLedgerBudget"@en ;
+    rdfs:comment "Information for utility Ledger Budgets."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpLedgerEntry a owl:Class ;
+    rdfs:label "ErpLedgerEntry"@en ;
+    rdfs:comment "Details of an individual entry in a ledger, which was posted from a journal on the posted date."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpPOLineItem a owl:Class ;
+    rdfs:label "ErpPOLineItem"@en ;
+    rdfs:comment "Of an ErpPurchaseOrder, this is an individually ordered item or product along with the quantity, price and other descriptive information."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpPayable a owl:Class ;
+    rdfs:label "ErpPayable"@en ;
+    rdfs:comment "A transaction that represents an invoice from a supplier (accounts payable)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpPayment a owl:Class ;
+    rdfs:label "ErpPayment"@en ;
+    rdfs:comment "Payment infromation and status for any individual line item of an ErpInvoice."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpPersonnel a owl:Class ;
+    rdfs:label "ErpPersonnel"@en ;
+    rdfs:comment "Information that generally describes the Person as it relates to the ERP (human resources)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpProjectAccounting a owl:Class ;
+    rdfs:label "ErpProjectAccounting"@en ;
+    rdfs:comment "Utility Project Accounting information (WBS / internal order)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpPurchaseOrder a owl:Class ;
+    rdfs:label "ErpPurchaseOrder"@en ;
+    rdfs:comment "A document that communicates an order to purchase goods from a buyer to a supplier."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpQuote a owl:Class ;
+    rdfs:label "ErpQuote"@en ;
+    rdfs:comment "Document describing the prices of goods or services provided by a supplier (RFQ / quote)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpQuoteLineItem a owl:Class ;
+    rdfs:label "ErpQuoteLineItem"@en ;
+    rdfs:comment "Of an ErpQuote, the item or product quoted along with quantity, price and other descriptive information."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpReceivable a owl:Class ;
+    rdfs:label "ErpReceivable"@en ;
+    rdfs:comment "Transaction representing an invoice, credit memo or debit memo to a customer (accounts receivable)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpReceiveDelivery a owl:Class ;
+    rdfs:label "ErpReceiveDelivery"@en ;
+    rdfs:comment "Transaction for an Organisation receiving goods or services that may be used to indicate receipt of goods."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpRequisition a owl:Class ;
+    rdfs:label "ErpRequisition"@en ;
+    rdfs:comment "General information that applies to a utility requisition that is a request for the purchase of goods or services."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:ErpTimeEntry a owl:Class ;
+    rdfs:label "ErpTimeEntry"@en ;
+    rdfs:comment "An individual entry on an ErpTimeSheet."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfERPSupport" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:EstimatedRestorationTime a owl:Class ;
+    rdfs:label "EstimatedRestorationTime"@en ;
+    rdfs:comment "Estimated restoration time (ETR) for an outage."@en ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:FailureEvent a owl:Class ;
+    rdfs:label "FailureEvent"@en ;
+    rdfs:comment "An event where an asset has failed to perform its functions within specified parameters."@en ;
+    rdfs:subClassOf cim:ActivityRecord ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Feeder a owl:Class ;
+    rdfs:label "Feeder"@en ;
+    rdfs:comment "A collection of equipment organised for the primary purpose of distributing power from a substation."@en ;
+    rdfs:subClassOf cim:EquipmentContainer ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:FieldDispatchHistory a owl:Class ;
+    rdfs:label "FieldDispatchHistory"@en ;
+    rdfs:comment "The history of field dispatch steps for a crew."@en ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:FinancialInfo a owl:Class ;
+    rdfs:label "FinancialInfo"@en ;
+    rdfs:comment "Various current financial properties associated with a particular asset."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Flowgate a owl:Class ;
+    rdfs:label "Flowgate"@en ;
+    rdfs:comment "A flowgate is a set of transmission elements whose flow is monitored for congestion management."@en ;
+    rdfs:subClassOf cim:PowerSystemResource ;
+    cmm:cimPackage "IEC62325::ReferenceData" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:FossilFuel a owl:Class ;
+    rdfs:label "FossilFuel"@en ;
+    rdfs:comment "The fossil fuel consumed by the non-nuclear thermal generating unit."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Generation::Production" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:GenUnitOpSchedule a owl:Class ;
+    rdfs:label "GenUnitOpSchedule"@en ;
+    rdfs:comment "The generating unit's operator-approved current operating schedule."@en ;
+    rdfs:subClassOf cim:RegularIntervalSchedule ;
+    cmm:cimPackage "IEC61970::Generation::Production" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:GeneratingUnit a owl:Class ;
+    rdfs:label "GeneratingUnit"@en ;
+    rdfs:comment "A single or set of synchronous machines for converting mechanical power into AC power."@en ;
+    rdfs:subClassOf cim:Equipment ;
+    cmm:cimPackage "IEC61970::Generation::Production" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:GeographicalRegion a owl:Class ;
+    rdfs:label "GeographicalRegion"@en ;
+    rdfs:comment "A geographical region of a power system network model."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:HeatRateCurve a owl:Class ;
+    rdfs:label "HeatRateCurve"@en ;
+    rdfs:comment "Relationship between unit heat rate and net power output."@en ;
+    rdfs:subClassOf cim:Curve ;
+    cmm:cimPackage "IEC61970::Generation::Production" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:IdentifiedObject a owl:Class ;
+    rdfs:label "IdentifiedObject"@en ;
+    rdfs:comment "Root class providing mRID, name, description and aliasName for all CIM objects."@en ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:InUseDate a owl:Class ;
+    rdfs:label "InUseDate"@en ;
+    rdfs:comment "Dates associated with asset 'in use' status."@en ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Incident a owl:Class ;
+    rdfs:label "Incident"@en ;
+    rdfs:comment "Description of a problem in the field that may be reported in a trouble ticket or come from another source."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:InspectionDataSet a owl:Class ;
+    rdfs:label "InspectionDataSet"@en ;
+    rdfs:comment "Documents the result of one inspection (ProcedureDataSet)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:IntervalReading a owl:Class ;
+    rdfs:label "IntervalReading"@en ;
+    rdfs:comment "Data captured at regular intervals of time (BaseReading)."@en ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:LaborItem a owl:Class ;
+    rdfs:label "LaborItem"@en ;
+    rdfs:comment "Labor used for work orders."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::InfWork" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-6" .
+
+cim:LifecycleDate a owl:Class ;
+    rdfs:label "LifecycleDate"@en ;
+    rdfs:comment "Dates for asset lifecycle state changes."@en ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Line a owl:Class ;
+    rdfs:label "Line"@en ;
+    rdfs:comment "Contains equipment beyond a substation belonging to a power transmission line."@en ;
+    rdfs:subClassOf cim:EquipmentContainer ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:LinearShuntCompensator a owl:Class ;
+    rdfs:label "LinearShuntCompensator"@en ;
+    rdfs:comment "A linear shunt compensator (capacitor or reactor bank) with uniform sections."@en ;
+    rdfs:subClassOf cim:RegulatingCondEq ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:LoadArea a owl:Class ;
+    rdfs:label "LoadArea"@en ;
+    rdfs:comment "The class is the root or first level in a hierarchical structure for grouping of loads for load flow load scaling."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::LoadModel" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Location a owl:Class ;
+    rdfs:label "Location"@en ;
+    rdfs:comment "The place, scene, or point of something where someone or something has been, is, and/or will be."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Manufacturer a owl:Class ;
+    rdfs:label "Manufacturer"@en ;
+    rdfs:comment "Organisation that manufactures asset products."@en ;
+    rdfs:subClassOf cim:OrganisationRole ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:MarketParticipant a owl:Class ;
+    rdfs:label "MarketParticipant"@en ;
+    rdfs:comment "An identification of a party acting in an electricity market business process."@en ;
+    rdfs:subClassOf cim:Organisation ;
+    cmm:cimPackage "IEC62325::MarketCommon" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:MarketRun a owl:Class ;
+    rdfs:label "MarketRun"@en ;
+    rdfs:comment "Represent an actual instance of an executed market run."@en ;
+    cmm:cimPackage "IEC62325::MarketPlan" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:MarketStatement a owl:Class ;
+    rdfs:label "MarketStatement"@en ;
+    rdfs:comment "A statement is a roll up of statement line items (settlement statement)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC62325::MarketManagement" ;
+    cmm:cimStandard "IEC 62325-301 / IEC 62325-351" .
+
+cim:MaterialItem a owl:Class ;
+    rdfs:label "MaterialItem"@en ;
+    rdfs:comment "The physical consumable supply used for work and other purposes."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Work" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Measurement a owl:Class ;
+    rdfs:label "Measurement"@en ;
+    rdfs:comment "A Measurement represents any measured, calculated or non-measured non-calculated quantity."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Meas" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:MeasurementValue a owl:Class ;
+    rdfs:label "MeasurementValue"@en ;
+    rdfs:comment "The current state for a measurement."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Meas" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Meter a owl:Class ;
+    rdfs:label "Meter"@en ;
+    rdfs:comment "Physical asset that performs the metering role of the usage point (EndDevice)."@en ;
+    rdfs:subClassOf cim:EndDevice ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:MeterMultiplier a owl:Class ;
+    rdfs:label "MeterMultiplier"@en ;
+    rdfs:comment "Multiplier applied at the meter."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:MeterReading a owl:Class ;
+    rdfs:label "MeterReading"@en ;
+    rdfs:comment "Set of values obtained from the meter."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:MeterServiceWork a owl:Class ;
+    rdfs:label "MeterServiceWork"@en ;
+    rdfs:comment "Work involving meters (install, remove, exchange)."@en ;
+    rdfs:subClassOf cim:Work ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:Money a owl:Class ;
+    rdfs:label "Money"@en ;
+    rdfs:comment "Amount of money (with Currency)."@en ;
+    cmm:cimPackage "IEC61970::Domain" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Name a owl:Class ;
+    rdfs:label "Name"@en ;
+    rdfs:comment "The Name class provides the means to define any number of human readable names for an object."@en ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:NameTypeAuthority a owl:Class ;
+    rdfs:label "NameTypeAuthority"@en ;
+    rdfs:comment "Authority responsible for creation and management of names of a given type (source system)."@en ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:OperationalLimit a owl:Class ;
+    rdfs:label "OperationalLimit"@en ;
+    rdfs:comment "A value and normal value associated with a specific kind of limit."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::OperationalLimits" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:OperationalUpdatedRating a owl:Class ;
+    rdfs:label "OperationalUpdatedRating"@en ;
+    rdfs:comment "An event to override the operational rating, e.g. dynamic line rating."@en ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:Organisation a owl:Class ;
+    rdfs:label "Organisation"@en ;
+    rdfs:comment "Organisation that might have roles as utility, contractor, supplier, manufacturer, customer, etc."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:OrganisationRole a owl:Class ;
+    rdfs:label "OrganisationRole"@en ;
+    rdfs:comment "Identifies a way in which an organisation may participate in the utility enterprise."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Outage a owl:Class ;
+    rdfs:label "Outage"@en ;
+    rdfs:comment "Document describing details of an active or planned outage in a part of the electrical network."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:OutageArea a owl:Class ;
+    rdfs:label "OutageArea"@en ;
+    rdfs:comment "Area affected by an outage."@en ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:PSREvent a owl:Class ;
+    rdfs:label "PSREvent"@en ;
+    rdfs:comment "Event recording the change in operational status of a power system resource."@en ;
+    rdfs:subClassOf cim:ActivityRecord ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:Person a owl:Class ;
+    rdfs:label "Person"@en ;
+    rdfs:comment "General purpose information for name and other information to contact people."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:PlannedOutage a owl:Class ;
+    rdfs:label "PlannedOutage"@en ;
+    rdfs:comment "Planned outage."@en ;
+    rdfs:subClassOf cim:Outage ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:Plant a owl:Class ;
+    rdfs:label "Plant"@en ;
+    rdfs:comment "A collection of equipment for purposes of generation."@en ;
+    rdfs:subClassOf cim:EquipmentContainer ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Pnode a owl:Class ;
+    rdfs:label "Pnode"@en ;
+    rdfs:comment "A pricing node is directly associated with a connectivity node; a pricing location for which market participants submit bids, offers, buy/sell CRRs, and settle."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC62325::ReferenceData" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:PnodeResults a owl:Class ;
+    rdfs:label "PnodeResults"@en ;
+    rdfs:comment "Provides the total price, the cost component, the loss component, and the congestion component for Pnodes (LMP)."@en ;
+    cmm:cimPackage "IEC62325::MarketResults" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:PositionPoint a owl:Class ;
+    rdfs:label "PositionPoint"@en ;
+    rdfs:comment "Set of spatial coordinates that determine a point, defined in the coordinate system specified in Location."@en ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:PowerElectronicsConnection a owl:Class ;
+    rdfs:label "PowerElectronicsConnection"@en ;
+    rdfs:comment "A connection to the AC network for energy production or consumption that uses power electronics (DER)."@en ;
+    rdfs:subClassOf cim:RegulatingCondEq ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:PowerSystemResource a owl:Class ;
+    rdfs:label "PowerSystemResource"@en ;
+    rdfs:comment "A power system resource: equipment, container or functional grouping of the network."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:PowerTransformer a owl:Class ;
+    rdfs:label "PowerTransformer"@en ;
+    rdfs:comment "An electrical device consisting of two or more coupled windings, used to transform voltage."@en ;
+    rdfs:subClassOf cim:ConductingEquipment ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:PowerTransformerEnd a owl:Class ;
+    rdfs:label "PowerTransformerEnd"@en ;
+    rdfs:comment "A PowerTransformerEnd is associated with each Terminal of a PowerTransformer."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Priority a owl:Class ;
+    rdfs:label "Priority"@en ;
+    rdfs:comment "Priority definition."@en ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Procedure a owl:Class ;
+    rdfs:label "Procedure"@en ;
+    rdfs:comment "A documented procedure for various types of work or work tasks on assets."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:ProductAssetModel a owl:Class ;
+    rdfs:label "ProductAssetModel"@en ;
+    rdfs:comment "Asset model by a specific manufacturer."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Project a owl:Class ;
+    rdfs:label "Project"@en ;
+    rdfs:comment "A collection of related work (capital project)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfWork" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-6" .
+
+cim:ProtectedSwitch a owl:Class ;
+    rdfs:label "ProtectedSwitch"@en ;
+    rdfs:comment "A ProtectedSwitch is a switching device that can be operated by ProtectionEquipment."@en ;
+    rdfs:subClassOf cim:Switch ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:ProtectionEquipment a owl:Class ;
+    rdfs:label "ProtectionEquipment"@en ;
+    rdfs:comment "An electrical device designed to respond to input conditions in a prescribed manner (relay)."@en ;
+    rdfs:subClassOf cim:Equipment ;
+    cmm:cimPackage "IEC61970::Protection" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Reading a owl:Class ;
+    rdfs:label "Reading"@en ;
+    rdfs:comment "Specific value measured by a meter or other asset, or calculated by a system (BaseReading)."@en ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:ReadingQuality a owl:Class ;
+    rdfs:label "ReadingQuality"@en ;
+    rdfs:comment "Quality of a specific reading value or interval reading value (VEE)."@en ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:ReadingType a owl:Class ;
+    rdfs:label "ReadingType"@en ;
+    rdfs:comment "Detailed description for a type of a reading value."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:Register a owl:Class ;
+    rdfs:label "Register"@en ;
+    rdfs:comment "A device that indicates or records units of the commodity or other quantity measured."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:RegisteredLoad a owl:Class ;
+    rdfs:label "RegisteredLoad"@en ;
+    rdfs:comment "Model of a load that is registered to participate in the market (incl. DR)."@en ;
+    rdfs:subClassOf cim:RegisteredResource ;
+    cmm:cimPackage "IEC62325::MarketCommon" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:RegisteredResource a owl:Class ;
+    rdfs:label "RegisteredResource"@en ;
+    rdfs:comment "A resource that is registered through the market participant registration system."@en ;
+    rdfs:subClassOf cim:PowerSystemResource ;
+    cmm:cimPackage "IEC62325::MarketCommon" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:RegularIntervalSchedule a owl:Class ;
+    rdfs:label "RegularIntervalSchedule"@en ;
+    rdfs:comment "The schedule has time points where the time between them is constant."@en ;
+    rdfs:subClassOf cim:BasicIntervalSchedule ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:RegularTimePoint a owl:Class ;
+    rdfs:label "RegularTimePoint"@en ;
+    rdfs:comment "Time point for a schedule where the time between consecutive points is constant."@en ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:RegulatingCondEq a owl:Class ;
+    rdfs:label "RegulatingCondEq"@en ;
+    rdfs:comment "A type of conducting equipment that can regulate a quantity (voltage or flow) at a specific point."@en ;
+    rdfs:subClassOf cim:ConductingEquipment ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:RemoteUnit a owl:Class ;
+    rdfs:label "RemoteUnit"@en ;
+    rdfs:comment "A remote unit can be an RTU, IED, substation control system, control center etc."@en ;
+    rdfs:subClassOf cim:PowerSystemResource ;
+    cmm:cimPackage "IEC61970::SCADA" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Request a owl:Class ;
+    rdfs:label "Request"@en ;
+    rdfs:comment "A request for work, service or project."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfWork" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-6" .
+
+cim:ResourceAwardInstruction a owl:Class ;
+    rdfs:label "ResourceAwardInstruction"@en ;
+    rdfs:comment "Model of market results, instruction for resource (award)."@en ;
+    cmm:cimPackage "IEC62325::MarketResults" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:ResourceBid a owl:Class ;
+    rdfs:label "ResourceBid"@en ;
+    rdfs:comment "Energy bid for generation, load, or virtual type for the whole of the market-trading period."@en ;
+    rdfs:subClassOf cim:Bid ;
+    cmm:cimPackage "IEC62325::ParticipantInterfaces" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:RightOfWay a owl:Class ;
+    rdfs:label "RightOfWay"@en ;
+    rdfs:comment "A right-of-way (ROW) is for land where it is lawful to use for a public road, an electric power line, etc."@en ;
+    rdfs:subClassOf cim:Agreement ;
+    cmm:cimPackage "IEC61968::InfLocations" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:RiskScore a owl:Class ;
+    rdfs:label "RiskScore"@en ;
+    rdfs:comment "Score that is indicative of the risk associated with one or more assets (AnalyticScore)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:SchedulingCoordinator a owl:Class ;
+    rdfs:label "SchedulingCoordinator"@en ;
+    rdfs:comment "Scheduling coordinator registered with an ISO/RTO."@en ;
+    rdfs:subClassOf cim:MarketParticipant ;
+    cmm:cimPackage "IEC62325::MarketOpCommon" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:SecurityConstraints a owl:Class ;
+    rdfs:label "SecurityConstraints"@en ;
+    rdfs:comment "Typical for regional transmission operators, a transmission constraint that is enforced in market clearing."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC62325::ExternalInputs" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:ServiceGuarantee a owl:Class ;
+    rdfs:label "ServiceGuarantee"@en ;
+    rdfs:comment "A service guarantee, often imposed by a regulator, defines conditions that, if not satisfied, will result in the utility making a monetary payment to the customer."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfCustomers" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:ServiceLocation a owl:Class ;
+    rdfs:label "ServiceLocation"@en ;
+    rdfs:comment "A real estate location, commonly referred to as premises."@en ;
+    rdfs:subClassOf cim:WorkLocation ;
+    cmm:cimPackage "IEC61968::Customers" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:ServicePoint a owl:Class ;
+    rdfs:label "ServicePoint"@en ;
+    rdfs:comment "Each ServicePoint is contained within (or on the boundary of) an interchange area (delivery point)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC62325::InfEnergyScheduling" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:Settlement a owl:Class ;
+    rdfs:label "Settlement"@en ;
+    rdfs:comment "Specifies a settlement run."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC62325::MarketResults" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:Skill a owl:Class ;
+    rdfs:label "Skill"@en ;
+    rdfs:comment "Proficiency level of a craft, which is required to operate or maintain a particular type of asset and/or perform certain types of work."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfCommon" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:StartupModel a owl:Class ;
+    rdfs:label "StartupModel"@en ;
+    rdfs:comment "Unit start up characteristics depending on how long the unit has been off line."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Generation::Production" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:StateVariable a owl:Class ;
+    rdfs:label "StateVariable"@en ;
+    rdfs:comment "An abstract class for state variables (SvVoltage, SvPowerFlow ...)."@en ;
+    cmm:cimPackage "IEC61970::StateVariables" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:StreetAddress a owl:Class ;
+    rdfs:label "StreetAddress"@en ;
+    rdfs:comment "General purpose street and postal address information."@en ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:StreetDetail a owl:Class ;
+    rdfs:label "StreetDetail"@en ;
+    rdfs:comment "Street details, in the context of address."@en ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:SubGeographicalRegion a owl:Class ;
+    rdfs:label "SubGeographicalRegion"@en ;
+    rdfs:comment "A subset of a geographical region of a power system network model."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:SubLoadArea a owl:Class ;
+    rdfs:label "SubLoadArea"@en ;
+    rdfs:comment "The class is the second level in a hierarchical structure for grouping of loads."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::LoadModel" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Substation a owl:Class ;
+    rdfs:label "Substation"@en ;
+    rdfs:comment "A collection of equipment for switching or modifying voltage, frequency or other characteristics."@en ;
+    rdfs:subClassOf cim:EquipmentContainer ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:Switch a owl:Class ;
+    rdfs:label "Switch"@en ;
+    rdfs:comment "A generic device designed to close, or open, or both, one or more electric circuits."@en ;
+    rdfs:subClassOf cim:ConductingEquipment ;
+    cmm:cimPackage "IEC61970::Wires" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:SwitchingAction a owl:Class ;
+    rdfs:label "SwitchingAction"@en ;
+    rdfs:comment "Atomic switching action (switch, ground, jumper, energy source, tag)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:SwitchingPlan a owl:Class ;
+    rdfs:label "SwitchingPlan"@en ;
+    rdfs:comment "A sequence of grouped or atomic steps intended to accomplish a specific change in the switchable devices."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Operations" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-3" .
+
+cim:Tariff a owl:Class ;
+    rdfs:label "Tariff"@en ;
+    rdfs:comment "Document, approved by the responsible regulatory agency, listing the terms and conditions, including a schedule of prices."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Customers" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:TelephoneNumber a owl:Class ;
+    rdfs:label "TelephoneNumber"@en ;
+    rdfs:comment "Telephone number."@en ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Terminal a owl:Class ;
+    rdfs:label "Terminal"@en ;
+    rdfs:comment "An AC electrical connection point to a piece of conducting equipment."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Core" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:TestDataSet a owl:Class ;
+    rdfs:label "TestDataSet"@en ;
+    rdfs:comment "Test results, usually obtained by a lab or other independent organisation (ProcedureDataSet)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Assets" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:TimeSchedule a owl:Class ;
+    rdfs:label "TimeSchedule"@en ;
+    rdfs:comment "Description of anything that changes through time."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:TimeTariffInterval a owl:Class ;
+    rdfs:label "TimeTariffInterval"@en ;
+    rdfs:comment "One of a sequence of time intervals defined in terms of real time (TOU)."@en ;
+    cmm:cimPackage "IEC61968::PaymentMetering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:TopologicalIsland a owl:Class ;
+    rdfs:label "TopologicalIsland"@en ;
+    rdfs:comment "An electrically connected subset of the network."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Topology" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:TopologicalNode a owl:Class ;
+    rdfs:label "TopologicalNode"@en ;
+    rdfs:comment "For a detailed substation model a topological node is a set of connectivity nodes that are connected by closed switches (bus)."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61970::Topology" ;
+    cmm:cimStandard "IEC 61970-301" .
+
+cim:TownDetail a owl:Class ;
+    rdfs:label "TownDetail"@en ;
+    rdfs:comment "Town details, in the context of address or telephone number."@en ;
+    cmm:cimPackage "IEC61968::Common" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Trade a owl:Class ;
+    rdfs:label "Trade"@en ;
+    rdfs:comment "Inter-scheduling coordinator trades to transfer obligations."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC62325::ParticipantInterfaces" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:Transaction a owl:Class ;
+    rdfs:label "Transaction"@en ;
+    rdfs:comment "The record of details of payment for service or token sale."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::PaymentMetering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-10" .
+
+cim:TransmissionPath a owl:Class ;
+    rdfs:label "TransmissionPath"@en ;
+    rdfs:comment "An electrical connection, link, or line consisting of one or more parallel transmission elements between two areas."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC62325::InfEnergyScheduling" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:TransmissionReservation a owl:Class ;
+    rdfs:label "TransmissionReservation"@en ;
+    rdfs:comment "A transmission reservation is obtained from the OASIS system to reserve transmission for a specified time period."@en ;
+    cmm:cimPackage "IEC62325::InfEnergyScheduling" ;
+    cmm:cimStandard "IEC 62325-301" .
+
+cim:TroubleTicket a owl:Class ;
+    rdfs:label "TroubleTicket"@en ;
+    rdfs:comment "A trouble ticket (customer trouble call)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Customers" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:UsagePoint a owl:Class ;
+    rdfs:label "UsagePoint"@en ;
+    rdfs:comment "Logical or physical point in the network to which readings or events may be attributed."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Metering" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-9" .
+
+cim:WeatherStation a owl:Class ;
+    rdfs:label "WeatherStation"@en ;
+    rdfs:comment "A weather station (EnvironmentalMonitoringStation) providing environmental observations and forecasts."@en ;
+    rdfs:subClassOf cim:IdentifiedObject ;
+    cmm:cimPackage "IEC61968::Environmental" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:Work a owl:Class ;
+    rdfs:label "Work"@en ;
+    rdfs:comment "Document used to request, initiate, track and record work (BaseWork)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Work" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:WorkCostDetail a owl:Class ;
+    rdfs:label "WorkCostDetail"@en ;
+    rdfs:comment "A collection of all of the individual cost items collected from multiple sources."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::InfWork" ;
+    cmm:cimStandard "IEC 61968-11 / IEC 61968-6" .
+
+cim:WorkLocation a owl:Class ;
+    rdfs:label "WorkLocation"@en ;
+    rdfs:comment "Information about a particular location for various forms of work."@en ;
+    rdfs:subClassOf cim:Location ;
+    cmm:cimPackage "IEC61968::Work" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:WorkTask a owl:Class ;
+    rdfs:label "WorkTask"@en ;
+    rdfs:comment "A task within a set of work (BaseWork)."@en ;
+    rdfs:subClassOf cim:Document ;
+    cmm:cimPackage "IEC61968::Work" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:WorkTimeSchedule a owl:Class ;
+    rdfs:label "WorkTimeSchedule"@en ;
+    rdfs:comment "Time schedule specific to work."@en ;
+    rdfs:subClassOf cim:TimeSchedule ;
+    cmm:cimPackage "IEC61968::Work" ;
+    cmm:cimStandard "IEC 61968-11" .
+
+cim:ACDCTerminal.connected a rdf:Property ;
+    rdfs:label "ACDCTerminal.connected"@en ;
+    rdfs:domain cim:ACDCTerminal .
+
+cim:ACDCTerminal.sequenceNumber a rdf:Property ;
+    rdfs:label "ACDCTerminal.sequenceNumber"@en ;
+    rdfs:domain cim:ACDCTerminal .
+
+cim:ACLineSegment.createdDateTime a rdf:Property ;
+    rdfs:label "ACLineSegment.createdDateTime"@en ;
+    rdfs:domain cim:ACLineSegment .
+
+cim:ActivityRecord.createdDateTime a rdf:Property ;
+    rdfs:label "ActivityRecord.createdDateTime"@en ;
+    rdfs:domain cim:ActivityRecord .
+
+cim:ActivityRecord.kind a rdf:Property ;
+    rdfs:label "ActivityRecord.kind"@en ;
+    rdfs:domain cim:ActivityRecord .
+
+cim:ActivityRecord.status a rdf:Property ;
+    rdfs:label "ActivityRecord.status"@en ;
+    rdfs:domain cim:ActivityRecord .
+
+cim:ActivityRecord.type a rdf:Property ;
+    rdfs:label "ActivityRecord.type"@en ;
+    rdfs:domain cim:ActivityRecord .
+
+cim:Agreement.createdDateTime a rdf:Property ;
+    rdfs:label "Agreement.createdDateTime"@en ;
+    rdfs:domain cim:Agreement .
+
+cim:Agreement.status a rdf:Property ;
+    rdfs:label "Agreement.status"@en ;
+    rdfs:domain cim:Agreement .
+
+cim:Agreement.type a rdf:Property ;
+    rdfs:label "Agreement.type"@en ;
+    rdfs:domain cim:Agreement .
+
+cim:AnalogValue.kind a rdf:Property ;
+    rdfs:label "AnalogValue.kind"@en ;
+    rdfs:domain cim:AnalogValue .
+
+cim:AnalogValue.value a rdf:Property ;
+    rdfs:label "AnalogValue.value"@en ;
+    rdfs:domain cim:AnalogValue .
+
+cim:AncillaryServiceClearing.createdDateTime a rdf:Property ;
+    rdfs:label "AncillaryServiceClearing.createdDateTime"@en ;
+    rdfs:domain cim:AncillaryServiceClearing .
+
+cim:AncillaryServiceClearing.kind a rdf:Property ;
+    rdfs:label "AncillaryServiceClearing.kind"@en ;
+    rdfs:domain cim:AncillaryServiceClearing .
+
+cim:AncillaryServiceClearing.status a rdf:Property ;
+    rdfs:label "AncillaryServiceClearing.status"@en ;
+    rdfs:domain cim:AncillaryServiceClearing .
+
+cim:Asset.createdDateTime a rdf:Property ;
+    rdfs:label "Asset.createdDateTime"@en ;
+    rdfs:domain cim:Asset .
+
+cim:Asset.lifecycleState a rdf:Property ;
+    rdfs:label "Asset.lifecycleState"@en ;
+    rdfs:domain cim:Asset .
+
+cim:Asset.purchasePrice a rdf:Property ;
+    rdfs:label "Asset.purchasePrice"@en ;
+    rdfs:domain cim:Asset .
+
+cim:Asset.serialNumber a rdf:Property ;
+    rdfs:label "Asset.serialNumber"@en ;
+    rdfs:domain cim:Asset .
+
+cim:Asset.status a rdf:Property ;
+    rdfs:label "Asset.status"@en ;
+    rdfs:domain cim:Asset .
+
+cim:Asset.type a rdf:Property ;
+    rdfs:label "Asset.type"@en ;
+    rdfs:domain cim:Asset .
+
+cim:AssetContainer.createdDateTime a rdf:Property ;
+    rdfs:label "AssetContainer.createdDateTime"@en ;
+    rdfs:domain cim:AssetContainer .
+
+cim:AssetContainer.type a rdf:Property ;
+    rdfs:label "AssetContainer.type"@en ;
+    rdfs:domain cim:AssetContainer .
+
+cim:AssetInfo.createdDateTime a rdf:Property ;
+    rdfs:label "AssetInfo.createdDateTime"@en ;
+    rdfs:domain cim:AssetInfo .
+
+cim:AssetInfo.status a rdf:Property ;
+    rdfs:label "AssetInfo.status"@en ;
+    rdfs:domain cim:AssetInfo .
+
+cim:Assignment.createdDateTime a rdf:Property ;
+    rdfs:label "Assignment.createdDateTime"@en ;
+    rdfs:domain cim:Assignment .
+
+cim:Assignment.status a rdf:Property ;
+    rdfs:label "Assignment.status"@en ;
+    rdfs:domain cim:Assignment .
+
+cim:Assignment.type a rdf:Property ;
+    rdfs:label "Assignment.type"@en ;
+    rdfs:domain cim:Assignment .
+
+cim:AuxiliaryAccount.createdDateTime a rdf:Property ;
+    rdfs:label "AuxiliaryAccount.createdDateTime"@en ;
+    rdfs:domain cim:AuxiliaryAccount .
+
+cim:AuxiliaryAccount.status a rdf:Property ;
+    rdfs:label "AuxiliaryAccount.status"@en ;
+    rdfs:domain cim:AuxiliaryAccount .
+
+cim:AuxiliaryAccount.type a rdf:Property ;
+    rdfs:label "AuxiliaryAccount.type"@en ;
+    rdfs:domain cim:AuxiliaryAccount .
+
+cim:AuxiliaryAgreement.createdDateTime a rdf:Property ;
+    rdfs:label "AuxiliaryAgreement.createdDateTime"@en ;
+    rdfs:domain cim:AuxiliaryAgreement .
+
+cim:AuxiliaryAgreement.status a rdf:Property ;
+    rdfs:label "AuxiliaryAgreement.status"@en ;
+    rdfs:domain cim:AuxiliaryAgreement .
+
+cim:AuxiliaryAgreement.type a rdf:Property ;
+    rdfs:label "AuxiliaryAgreement.type"@en ;
+    rdfs:domain cim:AuxiliaryAgreement .
+
+cim:BaseReading.timeStamp a rdf:Property ;
+    rdfs:label "BaseReading.timeStamp"@en ;
+    rdfs:domain cim:BaseReading .
+
+cim:BaseReading.value a rdf:Property ;
+    rdfs:label "BaseReading.value"@en ;
+    rdfs:domain cim:BaseReading .
+
+cim:BaseVoltage.nominalVoltage a rdf:Property ;
+    rdfs:label "BaseVoltage.nominalVoltage"@en ;
+    rdfs:domain cim:BaseVoltage .
+
+cim:BatteryUnit.createdDateTime a rdf:Property ;
+    rdfs:label "BatteryUnit.createdDateTime"@en ;
+    rdfs:domain cim:BatteryUnit .
+
+cim:BatteryUnit.status a rdf:Property ;
+    rdfs:label "BatteryUnit.status"@en ;
+    rdfs:domain cim:BatteryUnit .
+
+cim:Bid.createdDateTime a rdf:Property ;
+    rdfs:label "Bid.createdDateTime"@en ;
+    rdfs:domain cim:Bid .
+
+cim:Bid.status a rdf:Property ;
+    rdfs:label "Bid.status"@en ;
+    rdfs:domain cim:Bid .
+
+cim:Bid.type a rdf:Property ;
+    rdfs:label "Bid.type"@en ;
+    rdfs:domain cim:Bid .
+
+cim:CRR.createdDateTime a rdf:Property ;
+    rdfs:label "CRR.createdDateTime"@en ;
+    rdfs:domain cim:CRR .
+
+cim:CRR.status a rdf:Property ;
+    rdfs:label "CRR.status"@en ;
+    rdfs:domain cim:CRR .
+
+cim:CRR.type a rdf:Property ;
+    rdfs:label "CRR.type"@en ;
+    rdfs:domain cim:CRR .
+
+cim:Charge.createdDateTime a rdf:Property ;
+    rdfs:label "Charge.createdDateTime"@en ;
+    rdfs:domain cim:Charge .
+
+cim:Charge.kind a rdf:Property ;
+    rdfs:label "Charge.kind"@en ;
+    rdfs:domain cim:Charge .
+
+cim:Charge.status a rdf:Property ;
+    rdfs:label "Charge.status"@en ;
+    rdfs:domain cim:Charge .
+
+cim:ClearanceDocument.createdDateTime a rdf:Property ;
+    rdfs:label "ClearanceDocument.createdDateTime"@en ;
+    rdfs:domain cim:ClearanceDocument .
+
+cim:ClearanceDocument.status a rdf:Property ;
+    rdfs:label "ClearanceDocument.status"@en ;
+    rdfs:domain cim:ClearanceDocument .
+
+cim:ClearanceDocument.type a rdf:Property ;
+    rdfs:label "ClearanceDocument.type"@en ;
+    rdfs:domain cim:ClearanceDocument .
+
+cim:Conductor.length a rdf:Property ;
+    rdfs:label "Conductor.length"@en ;
+    rdfs:domain cim:Conductor .
+
+cim:ConformLoadSchedule.createdDateTime a rdf:Property ;
+    rdfs:label "ConformLoadSchedule.createdDateTime"@en ;
+    rdfs:domain cim:ConformLoadSchedule .
+
+cim:ConformLoadSchedule.status a rdf:Property ;
+    rdfs:label "ConformLoadSchedule.status"@en ;
+    rdfs:domain cim:ConformLoadSchedule .
+
+cim:ConnectivityNode.ConnectivityNodeContainer a rdf:Property ;
+    rdfs:label "ConnectivityNode.ConnectivityNodeContainer"@en ;
+    rdfs:domain cim:ConnectivityNode .
+
+cim:ConnectivityNode.createdDateTime a rdf:Property ;
+    rdfs:label "ConnectivityNode.createdDateTime"@en ;
+    rdfs:domain cim:ConnectivityNode .
+
+cim:ConnectivityNode.kind a rdf:Property ;
+    rdfs:label "ConnectivityNode.kind"@en ;
+    rdfs:domain cim:ConnectivityNode .
+
+cim:ConnectivityNode.status a rdf:Property ;
+    rdfs:label "ConnectivityNode.status"@en ;
+    rdfs:domain cim:ConnectivityNode .
+
+cim:Contingency.createdDateTime a rdf:Property ;
+    rdfs:label "Contingency.createdDateTime"@en ;
+    rdfs:domain cim:Contingency .
+
+cim:Contingency.kind a rdf:Property ;
+    rdfs:label "Contingency.kind"@en ;
+    rdfs:domain cim:Contingency .
+
+cim:Contingency.status a rdf:Property ;
+    rdfs:label "Contingency.status"@en ;
+    rdfs:domain cim:Contingency .
+
+cim:ContingencyEquipment.createdDateTime a rdf:Property ;
+    rdfs:label "ContingencyEquipment.createdDateTime"@en ;
+    rdfs:domain cim:ContingencyEquipment .
+
+cim:ContingencyEquipment.status a rdf:Property ;
+    rdfs:label "ContingencyEquipment.status"@en ;
+    rdfs:domain cim:ContingencyEquipment .
+
+cim:ControlArea.createdDateTime a rdf:Property ;
+    rdfs:label "ControlArea.createdDateTime"@en ;
+    rdfs:domain cim:ControlArea .
+
+cim:ControlArea.status a rdf:Property ;
+    rdfs:label "ControlArea.status"@en ;
+    rdfs:domain cim:ControlArea .
+
+cim:CoordinateSystem.crsUrn a rdf:Property ;
+    rdfs:label "CoordinateSystem.crsUrn"@en ;
+    rdfs:domain cim:CoordinateSystem .
+
+cim:Crew.createdDateTime a rdf:Property ;
+    rdfs:label "Crew.createdDateTime"@en ;
+    rdfs:domain cim:Crew .
+
+cim:Crew.kind a rdf:Property ;
+    rdfs:label "Crew.kind"@en ;
+    rdfs:domain cim:Crew .
+
+cim:Crew.status a rdf:Property ;
+    rdfs:label "Crew.status"@en ;
+    rdfs:domain cim:Crew .
+
+cim:CrewMember.createdDateTime a rdf:Property ;
+    rdfs:label "CrewMember.createdDateTime"@en ;
+    rdfs:domain cim:CrewMember .
+
+cim:CrewMember.kind a rdf:Property ;
+    rdfs:label "CrewMember.kind"@en ;
+    rdfs:domain cim:CrewMember .
+
+cim:CrewMember.status a rdf:Property ;
+    rdfs:label "CrewMember.status"@en ;
+    rdfs:domain cim:CrewMember .
+
+cim:Curve.createdDateTime a rdf:Property ;
+    rdfs:label "Curve.createdDateTime"@en ;
+    rdfs:domain cim:Curve .
+
+cim:Curve.kind a rdf:Property ;
+    rdfs:label "Curve.kind"@en ;
+    rdfs:domain cim:Curve .
+
+cim:Curve.status a rdf:Property ;
+    rdfs:label "Curve.status"@en ;
+    rdfs:domain cim:Curve .
+
+cim:Customer.createdDateTime a rdf:Property ;
+    rdfs:label "Customer.createdDateTime"@en ;
+    rdfs:domain cim:Customer .
+
+cim:Customer.status a rdf:Property ;
+    rdfs:label "Customer.status"@en ;
+    rdfs:domain cim:Customer .
+
+cim:CustomerAccount.createdDateTime a rdf:Property ;
+    rdfs:label "CustomerAccount.createdDateTime"@en ;
+    rdfs:domain cim:CustomerAccount .
+
+cim:CustomerAccount.status a rdf:Property ;
+    rdfs:label "CustomerAccount.status"@en ;
+    rdfs:domain cim:CustomerAccount .
+
+cim:CustomerAccount.type a rdf:Property ;
+    rdfs:label "CustomerAccount.type"@en ;
+    rdfs:domain cim:CustomerAccount .
+
+cim:CustomerAgreement.createdDateTime a rdf:Property ;
+    rdfs:label "CustomerAgreement.createdDateTime"@en ;
+    rdfs:domain cim:CustomerAgreement .
+
+cim:CustomerAgreement.status a rdf:Property ;
+    rdfs:label "CustomerAgreement.status"@en ;
+    rdfs:domain cim:CustomerAgreement .
+
+cim:CustomerAgreement.type a rdf:Property ;
+    rdfs:label "CustomerAgreement.type"@en ;
+    rdfs:domain cim:CustomerAgreement .
+
+cim:CustomerBillingInfo.createdDateTime a rdf:Property ;
+    rdfs:label "CustomerBillingInfo.createdDateTime"@en ;
+    rdfs:domain cim:CustomerBillingInfo .
+
+cim:CustomerBillingInfo.status a rdf:Property ;
+    rdfs:label "CustomerBillingInfo.status"@en ;
+    rdfs:domain cim:CustomerBillingInfo .
+
+cim:CustomerBillingInfo.type a rdf:Property ;
+    rdfs:label "CustomerBillingInfo.type"@en ;
+    rdfs:domain cim:CustomerBillingInfo .
+
+cim:CustomerNotification.createdDateTime a rdf:Property ;
+    rdfs:label "CustomerNotification.createdDateTime"@en ;
+    rdfs:domain cim:CustomerNotification .
+
+cim:CustomerNotification.kind a rdf:Property ;
+    rdfs:label "CustomerNotification.kind"@en ;
+    rdfs:domain cim:CustomerNotification .
+
+cim:CustomerNotification.status a rdf:Property ;
+    rdfs:label "CustomerNotification.status"@en ;
+    rdfs:domain cim:CustomerNotification .
+
+cim:DERGroupDispatch.createdDateTime a rdf:Property ;
+    rdfs:label "DERGroupDispatch.createdDateTime"@en ;
+    rdfs:domain cim:DERGroupDispatch .
+
+cim:DERGroupDispatch.status a rdf:Property ;
+    rdfs:label "DERGroupDispatch.status"@en ;
+    rdfs:domain cim:DERGroupDispatch .
+
+cim:DateTimeInterval.end a rdf:Property ;
+    rdfs:label "DateTimeInterval.end"@en ;
+    rdfs:domain cim:DateTimeInterval .
+
+cim:DateTimeInterval.start a rdf:Property ;
+    rdfs:label "DateTimeInterval.start"@en ;
+    rdfs:domain cim:DateTimeInterval .
+
+cim:DemandResponseProgram.createdDateTime a rdf:Property ;
+    rdfs:label "DemandResponseProgram.createdDateTime"@en ;
+    rdfs:domain cim:DemandResponseProgram .
+
+cim:DemandResponseProgram.kind a rdf:Property ;
+    rdfs:label "DemandResponseProgram.kind"@en ;
+    rdfs:domain cim:DemandResponseProgram .
+
+cim:DemandResponseProgram.status a rdf:Property ;
+    rdfs:label "DemandResponseProgram.status"@en ;
+    rdfs:domain cim:DemandResponseProgram .
+
+cim:Document.authorName a rdf:Property ;
+    rdfs:label "Document.authorName"@en ;
+    rdfs:domain cim:Document .
+
+cim:Document.comment a rdf:Property ;
+    rdfs:label "Document.comment"@en ;
+    rdfs:domain cim:Document .
+
+cim:Document.createdDateTime a rdf:Property ;
+    rdfs:label "Document.createdDateTime"@en ;
+    rdfs:domain cim:Document .
+
+cim:Document.kind a rdf:Property ;
+    rdfs:label "Document.kind"@en ;
+    rdfs:domain cim:Document .
+
+cim:Document.lastModifiedDateTime a rdf:Property ;
+    rdfs:label "Document.lastModifiedDateTime"@en ;
+    rdfs:domain cim:Document .
+
+cim:Document.revisionNumber a rdf:Property ;
+    rdfs:label "Document.revisionNumber"@en ;
+    rdfs:domain cim:Document .
+
+cim:Document.status a rdf:Property ;
+    rdfs:label "Document.status"@en ;
+    rdfs:domain cim:Document .
+
+cim:Document.subject a rdf:Property ;
+    rdfs:label "Document.subject"@en ;
+    rdfs:domain cim:Document .
+
+cim:Document.title a rdf:Property ;
+    rdfs:label "Document.title"@en ;
+    rdfs:domain cim:Document .
+
+cim:Document.type a rdf:Property ;
+    rdfs:label "Document.type"@en ;
+    rdfs:domain cim:Document .
+
+cim:ElectronicAddress.createdDateTime a rdf:Property ;
+    rdfs:label "ElectronicAddress.createdDateTime"@en ;
+    rdfs:domain cim:ElectronicAddress .
+
+cim:ElectronicAddress.kind a rdf:Property ;
+    rdfs:label "ElectronicAddress.kind"@en ;
+    rdfs:domain cim:ElectronicAddress .
+
+cim:ElectronicAddress.status a rdf:Property ;
+    rdfs:label "ElectronicAddress.status"@en ;
+    rdfs:domain cim:ElectronicAddress .
+
+cim:EndDevice.createdDateTime a rdf:Property ;
+    rdfs:label "EndDevice.createdDateTime"@en ;
+    rdfs:domain cim:EndDevice .
+
+cim:EndDevice.status a rdf:Property ;
+    rdfs:label "EndDevice.status"@en ;
+    rdfs:domain cim:EndDevice .
+
+cim:EndDeviceControl.createdDateTime a rdf:Property ;
+    rdfs:label "EndDeviceControl.createdDateTime"@en ;
+    rdfs:domain cim:EndDeviceControl .
+
+cim:EndDeviceControl.kind a rdf:Property ;
+    rdfs:label "EndDeviceControl.kind"@en ;
+    rdfs:domain cim:EndDeviceControl .
+
+cim:EndDeviceControl.status a rdf:Property ;
+    rdfs:label "EndDeviceControl.status"@en ;
+    rdfs:domain cim:EndDeviceControl .
+
+cim:EndDeviceEvent.createdDateTime a rdf:Property ;
+    rdfs:label "EndDeviceEvent.createdDateTime"@en ;
+    rdfs:domain cim:EndDeviceEvent .
+
+cim:EndDeviceGroup.createdDateTime a rdf:Property ;
+    rdfs:label "EndDeviceGroup.createdDateTime"@en ;
+    rdfs:domain cim:EndDeviceGroup .
+
+cim:EndDeviceGroup.status a rdf:Property ;
+    rdfs:label "EndDeviceGroup.status"@en ;
+    rdfs:domain cim:EndDeviceGroup .
+
+cim:EnergyTransaction.createdDateTime a rdf:Property ;
+    rdfs:label "EnergyTransaction.createdDateTime"@en ;
+    rdfs:domain cim:EnergyTransaction .
+
+cim:EnergyTransaction.status a rdf:Property ;
+    rdfs:label "EnergyTransaction.status"@en ;
+    rdfs:domain cim:EnergyTransaction .
+
+cim:EnergyTransaction.type a rdf:Property ;
+    rdfs:label "EnergyTransaction.type"@en ;
+    rdfs:domain cim:EnergyTransaction .
+
+cim:EquipmentContainer.createdDateTime a rdf:Property ;
+    rdfs:label "EquipmentContainer.createdDateTime"@en ;
+    rdfs:domain cim:EquipmentContainer .
+
+cim:EquipmentContainer.kind a rdf:Property ;
+    rdfs:label "EquipmentContainer.kind"@en ;
+    rdfs:domain cim:EquipmentContainer .
+
+cim:EquipmentContainer.status a rdf:Property ;
+    rdfs:label "EquipmentContainer.status"@en ;
+    rdfs:domain cim:EquipmentContainer .
+
+cim:ErpBankAccount.createdDateTime a rdf:Property ;
+    rdfs:label "ErpBankAccount.createdDateTime"@en ;
+    rdfs:domain cim:ErpBankAccount .
+
+cim:ErpBankAccount.kind a rdf:Property ;
+    rdfs:label "ErpBankAccount.kind"@en ;
+    rdfs:domain cim:ErpBankAccount .
+
+cim:ErpBankAccount.status a rdf:Property ;
+    rdfs:label "ErpBankAccount.status"@en ;
+    rdfs:domain cim:ErpBankAccount .
+
+cim:ErpChartOfAccounts.createdDateTime a rdf:Property ;
+    rdfs:label "ErpChartOfAccounts.createdDateTime"@en ;
+    rdfs:domain cim:ErpChartOfAccounts .
+
+cim:ErpChartOfAccounts.status a rdf:Property ;
+    rdfs:label "ErpChartOfAccounts.status"@en ;
+    rdfs:domain cim:ErpChartOfAccounts .
+
+cim:ErpChartOfAccounts.type a rdf:Property ;
+    rdfs:label "ErpChartOfAccounts.type"@en ;
+    rdfs:domain cim:ErpChartOfAccounts .
+
+cim:ErpCompetency.createdDateTime a rdf:Property ;
+    rdfs:label "ErpCompetency.createdDateTime"@en ;
+    rdfs:domain cim:ErpCompetency .
+
+cim:ErpCompetency.kind a rdf:Property ;
+    rdfs:label "ErpCompetency.kind"@en ;
+    rdfs:domain cim:ErpCompetency .
+
+cim:ErpCompetency.status a rdf:Property ;
+    rdfs:label "ErpCompetency.status"@en ;
+    rdfs:domain cim:ErpCompetency .
+
+cim:ErpInventory.createdDateTime a rdf:Property ;
+    rdfs:label "ErpInventory.createdDateTime"@en ;
+    rdfs:domain cim:ErpInventory .
+
+cim:ErpInventory.kind a rdf:Property ;
+    rdfs:label "ErpInventory.kind"@en ;
+    rdfs:domain cim:ErpInventory .
+
+cim:ErpInventoryCount.createdDateTime a rdf:Property ;
+    rdfs:label "ErpInventoryCount.createdDateTime"@en ;
+    rdfs:domain cim:ErpInventoryCount .
+
+cim:ErpInventoryCount.kind a rdf:Property ;
+    rdfs:label "ErpInventoryCount.kind"@en ;
+    rdfs:domain cim:ErpInventoryCount .
+
+cim:ErpInventoryCount.status a rdf:Property ;
+    rdfs:label "ErpInventoryCount.status"@en ;
+    rdfs:domain cim:ErpInventoryCount .
+
+cim:ErpInvoiceLineItem.createdDateTime a rdf:Property ;
+    rdfs:label "ErpInvoiceLineItem.createdDateTime"@en ;
+    rdfs:domain cim:ErpInvoiceLineItem .
+
+cim:ErpIssueInventory.createdDateTime a rdf:Property ;
+    rdfs:label "ErpIssueInventory.createdDateTime"@en ;
+    rdfs:domain cim:ErpIssueInventory .
+
+cim:ErpIssueInventory.kind a rdf:Property ;
+    rdfs:label "ErpIssueInventory.kind"@en ;
+    rdfs:domain cim:ErpIssueInventory .
+
+cim:ErpIssueInventory.status a rdf:Property ;
+    rdfs:label "ErpIssueInventory.status"@en ;
+    rdfs:domain cim:ErpIssueInventory .
+
+cim:ErpItemMaster.createdDateTime a rdf:Property ;
+    rdfs:label "ErpItemMaster.createdDateTime"@en ;
+    rdfs:domain cim:ErpItemMaster .
+
+cim:ErpItemMaster.kind a rdf:Property ;
+    rdfs:label "ErpItemMaster.kind"@en ;
+    rdfs:domain cim:ErpItemMaster .
+
+cim:ErpItemMaster.status a rdf:Property ;
+    rdfs:label "ErpItemMaster.status"@en ;
+    rdfs:domain cim:ErpItemMaster .
+
+cim:ErpJournalEntry.createdDateTime a rdf:Property ;
+    rdfs:label "ErpJournalEntry.createdDateTime"@en ;
+    rdfs:domain cim:ErpJournalEntry .
+
+cim:ErpLedgerBudget.createdDateTime a rdf:Property ;
+    rdfs:label "ErpLedgerBudget.createdDateTime"@en ;
+    rdfs:domain cim:ErpLedgerBudget .
+
+cim:ErpLedgerBudget.kind a rdf:Property ;
+    rdfs:label "ErpLedgerBudget.kind"@en ;
+    rdfs:domain cim:ErpLedgerBudget .
+
+cim:ErpLedgerBudget.status a rdf:Property ;
+    rdfs:label "ErpLedgerBudget.status"@en ;
+    rdfs:domain cim:ErpLedgerBudget .
+
+cim:ErpLedgerEntry.createdDateTime a rdf:Property ;
+    rdfs:label "ErpLedgerEntry.createdDateTime"@en ;
+    rdfs:domain cim:ErpLedgerEntry .
+
+cim:ErpLedgerEntry.kind a rdf:Property ;
+    rdfs:label "ErpLedgerEntry.kind"@en ;
+    rdfs:domain cim:ErpLedgerEntry .
+
+cim:ErpLedgerEntry.status a rdf:Property ;
+    rdfs:label "ErpLedgerEntry.status"@en ;
+    rdfs:domain cim:ErpLedgerEntry .
+
+cim:ErpPOLineItem.createdDateTime a rdf:Property ;
+    rdfs:label "ErpPOLineItem.createdDateTime"@en ;
+    rdfs:domain cim:ErpPOLineItem .
+
+cim:ErpPOLineItem.kind a rdf:Property ;
+    rdfs:label "ErpPOLineItem.kind"@en ;
+    rdfs:domain cim:ErpPOLineItem .
+
+cim:ErpPOLineItem.status a rdf:Property ;
+    rdfs:label "ErpPOLineItem.status"@en ;
+    rdfs:domain cim:ErpPOLineItem .
+
+cim:ErpPayable.createdDateTime a rdf:Property ;
+    rdfs:label "ErpPayable.createdDateTime"@en ;
+    rdfs:domain cim:ErpPayable .
+
+cim:ErpPayable.status a rdf:Property ;
+    rdfs:label "ErpPayable.status"@en ;
+    rdfs:domain cim:ErpPayable .
+
+cim:ErpPayable.type a rdf:Property ;
+    rdfs:label "ErpPayable.type"@en ;
+    rdfs:domain cim:ErpPayable .
+
+cim:ErpPayment.createdDateTime a rdf:Property ;
+    rdfs:label "ErpPayment.createdDateTime"@en ;
+    rdfs:domain cim:ErpPayment .
+
+cim:ErpPayment.status a rdf:Property ;
+    rdfs:label "ErpPayment.status"@en ;
+    rdfs:domain cim:ErpPayment .
+
+cim:ErpPersonnel.createdDateTime a rdf:Property ;
+    rdfs:label "ErpPersonnel.createdDateTime"@en ;
+    rdfs:domain cim:ErpPersonnel .
+
+cim:ErpPersonnel.kind a rdf:Property ;
+    rdfs:label "ErpPersonnel.kind"@en ;
+    rdfs:domain cim:ErpPersonnel .
+
+cim:ErpProjectAccounting.createdDateTime a rdf:Property ;
+    rdfs:label "ErpProjectAccounting.createdDateTime"@en ;
+    rdfs:domain cim:ErpProjectAccounting .
+
+cim:ErpProjectAccounting.kind a rdf:Property ;
+    rdfs:label "ErpProjectAccounting.kind"@en ;
+    rdfs:domain cim:ErpProjectAccounting .
+
+cim:ErpProjectAccounting.status a rdf:Property ;
+    rdfs:label "ErpProjectAccounting.status"@en ;
+    rdfs:domain cim:ErpProjectAccounting .
+
+cim:ErpProjectAccounting.type a rdf:Property ;
+    rdfs:label "ErpProjectAccounting.type"@en ;
+    rdfs:domain cim:ErpProjectAccounting .
+
+cim:ErpPurchaseOrder.createdDateTime a rdf:Property ;
+    rdfs:label "ErpPurchaseOrder.createdDateTime"@en ;
+    rdfs:domain cim:ErpPurchaseOrder .
+
+cim:ErpQuote.createdDateTime a rdf:Property ;
+    rdfs:label "ErpQuote.createdDateTime"@en ;
+    rdfs:domain cim:ErpQuote .
+
+cim:ErpQuoteLineItem.createdDateTime a rdf:Property ;
+    rdfs:label "ErpQuoteLineItem.createdDateTime"@en ;
+    rdfs:domain cim:ErpQuoteLineItem .
+
+cim:ErpQuoteLineItem.status a rdf:Property ;
+    rdfs:label "ErpQuoteLineItem.status"@en ;
+    rdfs:domain cim:ErpQuoteLineItem .
+
+cim:ErpReceivable.createdDateTime a rdf:Property ;
+    rdfs:label "ErpReceivable.createdDateTime"@en ;
+    rdfs:domain cim:ErpReceivable .
+
+cim:ErpReceivable.kind a rdf:Property ;
+    rdfs:label "ErpReceivable.kind"@en ;
+    rdfs:domain cim:ErpReceivable .
+
+cim:ErpReceivable.status a rdf:Property ;
+    rdfs:label "ErpReceivable.status"@en ;
+    rdfs:domain cim:ErpReceivable .
+
+cim:ErpRequisition.createdDateTime a rdf:Property ;
+    rdfs:label "ErpRequisition.createdDateTime"@en ;
+    rdfs:domain cim:ErpRequisition .
+
+cim:ErpRequisition.status a rdf:Property ;
+    rdfs:label "ErpRequisition.status"@en ;
+    rdfs:domain cim:ErpRequisition .
+
+cim:ErpRequisition.type a rdf:Property ;
+    rdfs:label "ErpRequisition.type"@en ;
+    rdfs:domain cim:ErpRequisition .
+
+cim:ErpTimeEntry.createdDateTime a rdf:Property ;
+    rdfs:label "ErpTimeEntry.createdDateTime"@en ;
+    rdfs:domain cim:ErpTimeEntry .
+
+cim:EstimatedRestorationTime.createdDateTime a rdf:Property ;
+    rdfs:label "EstimatedRestorationTime.createdDateTime"@en ;
+    rdfs:domain cim:EstimatedRestorationTime .
+
+cim:EstimatedRestorationTime.status a rdf:Property ;
+    rdfs:label "EstimatedRestorationTime.status"@en ;
+    rdfs:domain cim:EstimatedRestorationTime .
+
+cim:FailureEvent.createdDateTime a rdf:Property ;
+    rdfs:label "FailureEvent.createdDateTime"@en ;
+    rdfs:domain cim:FailureEvent .
+
+cim:FailureEvent.status a rdf:Property ;
+    rdfs:label "FailureEvent.status"@en ;
+    rdfs:domain cim:FailureEvent .
+
+cim:FailureEvent.type a rdf:Property ;
+    rdfs:label "FailureEvent.type"@en ;
+    rdfs:domain cim:FailureEvent .
+
+cim:Feeder.createdDateTime a rdf:Property ;
+    rdfs:label "Feeder.createdDateTime"@en ;
+    rdfs:domain cim:Feeder .
+
+cim:Feeder.kind a rdf:Property ;
+    rdfs:label "Feeder.kind"@en ;
+    rdfs:domain cim:Feeder .
+
+cim:Feeder.status a rdf:Property ;
+    rdfs:label "Feeder.status"@en ;
+    rdfs:domain cim:Feeder .
+
+cim:FieldDispatchHistory.createdDateTime a rdf:Property ;
+    rdfs:label "FieldDispatchHistory.createdDateTime"@en ;
+    rdfs:domain cim:FieldDispatchHistory .
+
+cim:FieldDispatchHistory.kind a rdf:Property ;
+    rdfs:label "FieldDispatchHistory.kind"@en ;
+    rdfs:domain cim:FieldDispatchHistory .
+
+cim:FieldDispatchHistory.status a rdf:Property ;
+    rdfs:label "FieldDispatchHistory.status"@en ;
+    rdfs:domain cim:FieldDispatchHistory .
+
+cim:FinancialInfo.createdDateTime a rdf:Property ;
+    rdfs:label "FinancialInfo.createdDateTime"@en ;
+    rdfs:domain cim:FinancialInfo .
+
+cim:FinancialInfo.kind a rdf:Property ;
+    rdfs:label "FinancialInfo.kind"@en ;
+    rdfs:domain cim:FinancialInfo .
+
+cim:FinancialInfo.status a rdf:Property ;
+    rdfs:label "FinancialInfo.status"@en ;
+    rdfs:domain cim:FinancialInfo .
+
+cim:Flowgate.createdDateTime a rdf:Property ;
+    rdfs:label "Flowgate.createdDateTime"@en ;
+    rdfs:domain cim:Flowgate .
+
+cim:Flowgate.kind a rdf:Property ;
+    rdfs:label "Flowgate.kind"@en ;
+    rdfs:domain cim:Flowgate .
+
+cim:Flowgate.status a rdf:Property ;
+    rdfs:label "Flowgate.status"@en ;
+    rdfs:domain cim:Flowgate .
+
+cim:FossilFuel.createdDateTime a rdf:Property ;
+    rdfs:label "FossilFuel.createdDateTime"@en ;
+    rdfs:domain cim:FossilFuel .
+
+cim:FossilFuel.status a rdf:Property ;
+    rdfs:label "FossilFuel.status"@en ;
+    rdfs:domain cim:FossilFuel .
+
+cim:GenUnitOpSchedule.createdDateTime a rdf:Property ;
+    rdfs:label "GenUnitOpSchedule.createdDateTime"@en ;
+    rdfs:domain cim:GenUnitOpSchedule .
+
+cim:GenUnitOpSchedule.kind a rdf:Property ;
+    rdfs:label "GenUnitOpSchedule.kind"@en ;
+    rdfs:domain cim:GenUnitOpSchedule .
+
+cim:GenUnitOpSchedule.status a rdf:Property ;
+    rdfs:label "GenUnitOpSchedule.status"@en ;
+    rdfs:domain cim:GenUnitOpSchedule .
+
+cim:GeneratingUnit.kind a rdf:Property ;
+    rdfs:label "GeneratingUnit.kind"@en ;
+    rdfs:domain cim:GeneratingUnit .
+
+cim:GeneratingUnit.ratedNetMaxP a rdf:Property ;
+    rdfs:label "GeneratingUnit.ratedNetMaxP"@en ;
+    rdfs:domain cim:GeneratingUnit .
+
+cim:GeneratingUnit.status a rdf:Property ;
+    rdfs:label "GeneratingUnit.status"@en ;
+    rdfs:domain cim:GeneratingUnit .
+
+cim:HeatRateCurve.createdDateTime a rdf:Property ;
+    rdfs:label "HeatRateCurve.createdDateTime"@en ;
+    rdfs:domain cim:HeatRateCurve .
+
+cim:HeatRateCurve.kind a rdf:Property ;
+    rdfs:label "HeatRateCurve.kind"@en ;
+    rdfs:domain cim:HeatRateCurve .
+
+cim:HeatRateCurve.status a rdf:Property ;
+    rdfs:label "HeatRateCurve.status"@en ;
+    rdfs:domain cim:HeatRateCurve .
+
+cim:IdentifiedObject.aliasName a rdf:Property ;
+    rdfs:label "IdentifiedObject.aliasName"@en ;
+    rdfs:domain cim:IdentifiedObject .
+
+cim:IdentifiedObject.createdDateTime a rdf:Property ;
+    rdfs:label "IdentifiedObject.createdDateTime"@en ;
+    rdfs:domain cim:IdentifiedObject .
+
+cim:IdentifiedObject.description a rdf:Property ;
+    rdfs:label "IdentifiedObject.description"@en ;
+    rdfs:domain cim:IdentifiedObject .
+
+cim:IdentifiedObject.kind a rdf:Property ;
+    rdfs:label "IdentifiedObject.kind"@en ;
+    rdfs:domain cim:IdentifiedObject .
+
+cim:IdentifiedObject.mRID a rdf:Property ;
+    rdfs:label "IdentifiedObject.mRID"@en ;
+    rdfs:domain cim:IdentifiedObject .
+
+cim:IdentifiedObject.name a rdf:Property ;
+    rdfs:label "IdentifiedObject.name"@en ;
+    rdfs:domain cim:IdentifiedObject .
+
+cim:IdentifiedObject.status a rdf:Property ;
+    rdfs:label "IdentifiedObject.status"@en ;
+    rdfs:domain cim:IdentifiedObject .
+
+cim:InUseDate.inUseDate a rdf:Property ;
+    rdfs:label "InUseDate.inUseDate"@en ;
+    rdfs:domain cim:InUseDate .
+
+cim:Incident.createdDateTime a rdf:Property ;
+    rdfs:label "Incident.createdDateTime"@en ;
+    rdfs:domain cim:Incident .
+
+cim:Incident.kind a rdf:Property ;
+    rdfs:label "Incident.kind"@en ;
+    rdfs:domain cim:Incident .
+
+cim:Incident.status a rdf:Property ;
+    rdfs:label "Incident.status"@en ;
+    rdfs:domain cim:Incident .
+
+cim:Incident.type a rdf:Property ;
+    rdfs:label "Incident.type"@en ;
+    rdfs:domain cim:Incident .
+
+cim:InspectionDataSet.createdDateTime a rdf:Property ;
+    rdfs:label "InspectionDataSet.createdDateTime"@en ;
+    rdfs:domain cim:InspectionDataSet .
+
+cim:InspectionDataSet.kind a rdf:Property ;
+    rdfs:label "InspectionDataSet.kind"@en ;
+    rdfs:domain cim:InspectionDataSet .
+
+cim:InspectionDataSet.status a rdf:Property ;
+    rdfs:label "InspectionDataSet.status"@en ;
+    rdfs:domain cim:InspectionDataSet .
+
+cim:IntervalReading.createdDateTime a rdf:Property ;
+    rdfs:label "IntervalReading.createdDateTime"@en ;
+    rdfs:domain cim:IntervalReading .
+
+cim:LaborItem.createdDateTime a rdf:Property ;
+    rdfs:label "LaborItem.createdDateTime"@en ;
+    rdfs:domain cim:LaborItem .
+
+cim:LaborItem.status a rdf:Property ;
+    rdfs:label "LaborItem.status"@en ;
+    rdfs:domain cim:LaborItem .
+
+cim:LifecycleDate.installationDate a rdf:Property ;
+    rdfs:label "LifecycleDate.installationDate"@en ;
+    rdfs:domain cim:LifecycleDate .
+
+cim:LifecycleDate.purchaseDate a rdf:Property ;
+    rdfs:label "LifecycleDate.purchaseDate"@en ;
+    rdfs:domain cim:LifecycleDate .
+
+cim:LifecycleDate.removalDate a rdf:Property ;
+    rdfs:label "LifecycleDate.removalDate"@en ;
+    rdfs:domain cim:LifecycleDate .
+
+cim:LifecycleDate.retiredDate a rdf:Property ;
+    rdfs:label "LifecycleDate.retiredDate"@en ;
+    rdfs:domain cim:LifecycleDate .
+
+cim:Line.kind a rdf:Property ;
+    rdfs:label "Line.kind"@en ;
+    rdfs:domain cim:Line .
+
+cim:Line.status a rdf:Property ;
+    rdfs:label "Line.status"@en ;
+    rdfs:domain cim:Line .
+
+cim:LinearShuntCompensator.createdDateTime a rdf:Property ;
+    rdfs:label "LinearShuntCompensator.createdDateTime"@en ;
+    rdfs:domain cim:LinearShuntCompensator .
+
+cim:LinearShuntCompensator.kind a rdf:Property ;
+    rdfs:label "LinearShuntCompensator.kind"@en ;
+    rdfs:domain cim:LinearShuntCompensator .
+
+cim:LinearShuntCompensator.status a rdf:Property ;
+    rdfs:label "LinearShuntCompensator.status"@en ;
+    rdfs:domain cim:LinearShuntCompensator .
+
+cim:LoadArea.createdDateTime a rdf:Property ;
+    rdfs:label "LoadArea.createdDateTime"@en ;
+    rdfs:domain cim:LoadArea .
+
+cim:LoadArea.kind a rdf:Property ;
+    rdfs:label "LoadArea.kind"@en ;
+    rdfs:domain cim:LoadArea .
+
+cim:LoadArea.status a rdf:Property ;
+    rdfs:label "LoadArea.status"@en ;
+    rdfs:domain cim:LoadArea .
+
+cim:Location.PositionPoints a rdf:Property ;
+    rdfs:label "Location.PositionPoints"@en ;
+    rdfs:domain cim:Location .
+
+cim:Location.direction a rdf:Property ;
+    rdfs:label "Location.direction"@en ;
+    rdfs:domain cim:Location .
+
+cim:Location.geoInfoReference a rdf:Property ;
+    rdfs:label "Location.geoInfoReference"@en ;
+    rdfs:domain cim:Location .
+
+cim:Location.status a rdf:Property ;
+    rdfs:label "Location.status"@en ;
+    rdfs:domain cim:Location .
+
+cim:Location.type a rdf:Property ;
+    rdfs:label "Location.type"@en ;
+    rdfs:domain cim:Location .
+
+cim:Manufacturer.name a rdf:Property ;
+    rdfs:label "Manufacturer.name"@en ;
+    rdfs:domain cim:Manufacturer .
+
+cim:MarketParticipant.createdDateTime a rdf:Property ;
+    rdfs:label "MarketParticipant.createdDateTime"@en ;
+    rdfs:domain cim:MarketParticipant .
+
+cim:MarketParticipant.kind a rdf:Property ;
+    rdfs:label "MarketParticipant.kind"@en ;
+    rdfs:domain cim:MarketParticipant .
+
+cim:MarketParticipant.status a rdf:Property ;
+    rdfs:label "MarketParticipant.status"@en ;
+    rdfs:domain cim:MarketParticipant .
+
+cim:MarketRun.createdDateTime a rdf:Property ;
+    rdfs:label "MarketRun.createdDateTime"@en ;
+    rdfs:domain cim:MarketRun .
+
+cim:MarketRun.kind a rdf:Property ;
+    rdfs:label "MarketRun.kind"@en ;
+    rdfs:domain cim:MarketRun .
+
+cim:MarketRun.status a rdf:Property ;
+    rdfs:label "MarketRun.status"@en ;
+    rdfs:domain cim:MarketRun .
+
+cim:MarketStatement.createdDateTime a rdf:Property ;
+    rdfs:label "MarketStatement.createdDateTime"@en ;
+    rdfs:domain cim:MarketStatement .
+
+cim:MarketStatement.status a rdf:Property ;
+    rdfs:label "MarketStatement.status"@en ;
+    rdfs:domain cim:MarketStatement .
+
+cim:Measurement.createdDateTime a rdf:Property ;
+    rdfs:label "Measurement.createdDateTime"@en ;
+    rdfs:domain cim:Measurement .
+
+cim:Measurement.kind a rdf:Property ;
+    rdfs:label "Measurement.kind"@en ;
+    rdfs:domain cim:Measurement .
+
+cim:Measurement.status a rdf:Property ;
+    rdfs:label "Measurement.status"@en ;
+    rdfs:domain cim:Measurement .
+
+cim:MeasurementValue.MeasurementValueQuality a rdf:Property ;
+    rdfs:label "MeasurementValue.MeasurementValueQuality"@en ;
+    rdfs:domain cim:MeasurementValue .
+
+cim:MeasurementValue.createdDateTime a rdf:Property ;
+    rdfs:label "MeasurementValue.createdDateTime"@en ;
+    rdfs:domain cim:MeasurementValue .
+
+cim:MeasurementValue.kind a rdf:Property ;
+    rdfs:label "MeasurementValue.kind"@en ;
+    rdfs:domain cim:MeasurementValue .
+
+cim:MeasurementValue.timeStamp a rdf:Property ;
+    rdfs:label "MeasurementValue.timeStamp"@en ;
+    rdfs:domain cim:MeasurementValue .
+
+cim:Meter.createdDateTime a rdf:Property ;
+    rdfs:label "Meter.createdDateTime"@en ;
+    rdfs:domain cim:Meter .
+
+cim:Meter.status a rdf:Property ;
+    rdfs:label "Meter.status"@en ;
+    rdfs:domain cim:Meter .
+
+cim:Meter.type a rdf:Property ;
+    rdfs:label "Meter.type"@en ;
+    rdfs:domain cim:Meter .
+
+cim:MeterMultiplier.value a rdf:Property ;
+    rdfs:label "MeterMultiplier.value"@en ;
+    rdfs:domain cim:MeterMultiplier .
+
+cim:MeterReading.createdDateTime a rdf:Property ;
+    rdfs:label "MeterReading.createdDateTime"@en ;
+    rdfs:domain cim:MeterReading .
+
+cim:MeterReading.status a rdf:Property ;
+    rdfs:label "MeterReading.status"@en ;
+    rdfs:domain cim:MeterReading .
+
+cim:MeterServiceWork.createdDateTime a rdf:Property ;
+    rdfs:label "MeterServiceWork.createdDateTime"@en ;
+    rdfs:domain cim:MeterServiceWork .
+
+cim:MeterServiceWork.status a rdf:Property ;
+    rdfs:label "MeterServiceWork.status"@en ;
+    rdfs:domain cim:MeterServiceWork .
+
+cim:MeterServiceWork.type a rdf:Property ;
+    rdfs:label "MeterServiceWork.type"@en ;
+    rdfs:domain cim:MeterServiceWork .
+
+cim:Money.currency a rdf:Property ;
+    rdfs:label "Money.currency"@en ;
+    rdfs:domain cim:Money .
+
+cim:Name.name a rdf:Property ;
+    rdfs:label "Name.name"@en ;
+    rdfs:domain cim:Name .
+
+cim:NameTypeAuthority.name a rdf:Property ;
+    rdfs:label "NameTypeAuthority.name"@en ;
+    rdfs:domain cim:NameTypeAuthority .
+
+cim:OperationalLimit.createdDateTime a rdf:Property ;
+    rdfs:label "OperationalLimit.createdDateTime"@en ;
+    rdfs:domain cim:OperationalLimit .
+
+cim:OperationalLimit.kind a rdf:Property ;
+    rdfs:label "OperationalLimit.kind"@en ;
+    rdfs:domain cim:OperationalLimit .
+
+cim:OperationalLimit.status a rdf:Property ;
+    rdfs:label "OperationalLimit.status"@en ;
+    rdfs:domain cim:OperationalLimit .
+
+cim:OperationalUpdatedRating.createdDateTime a rdf:Property ;
+    rdfs:label "OperationalUpdatedRating.createdDateTime"@en ;
+    rdfs:domain cim:OperationalUpdatedRating .
+
+cim:OperationalUpdatedRating.status a rdf:Property ;
+    rdfs:label "OperationalUpdatedRating.status"@en ;
+    rdfs:domain cim:OperationalUpdatedRating .
+
+cim:Organisation.createdDateTime a rdf:Property ;
+    rdfs:label "Organisation.createdDateTime"@en ;
+    rdfs:domain cim:Organisation .
+
+cim:Organisation.kind a rdf:Property ;
+    rdfs:label "Organisation.kind"@en ;
+    rdfs:domain cim:Organisation .
+
+cim:Organisation.status a rdf:Property ;
+    rdfs:label "Organisation.status"@en ;
+    rdfs:domain cim:Organisation .
+
+cim:OrganisationRole.createdDateTime a rdf:Property ;
+    rdfs:label "OrganisationRole.createdDateTime"@en ;
+    rdfs:domain cim:OrganisationRole .
+
+cim:OrganisationRole.kind a rdf:Property ;
+    rdfs:label "OrganisationRole.kind"@en ;
+    rdfs:domain cim:OrganisationRole .
+
+cim:OrganisationRole.status a rdf:Property ;
+    rdfs:label "OrganisationRole.status"@en ;
+    rdfs:domain cim:OrganisationRole .
+
+cim:Outage.createdDateTime a rdf:Property ;
+    rdfs:label "Outage.createdDateTime"@en ;
+    rdfs:domain cim:Outage .
+
+cim:Outage.status a rdf:Property ;
+    rdfs:label "Outage.status"@en ;
+    rdfs:domain cim:Outage .
+
+cim:Outage.type a rdf:Property ;
+    rdfs:label "Outage.type"@en ;
+    rdfs:domain cim:Outage .
+
+cim:OutageArea.createdDateTime a rdf:Property ;
+    rdfs:label "OutageArea.createdDateTime"@en ;
+    rdfs:domain cim:OutageArea .
+
+cim:OutageArea.kind a rdf:Property ;
+    rdfs:label "OutageArea.kind"@en ;
+    rdfs:domain cim:OutageArea .
+
+cim:OutageArea.status a rdf:Property ;
+    rdfs:label "OutageArea.status"@en ;
+    rdfs:domain cim:OutageArea .
+
+cim:PSREvent.createdDateTime a rdf:Property ;
+    rdfs:label "PSREvent.createdDateTime"@en ;
+    rdfs:domain cim:PSREvent .
+
+cim:PSREvent.status a rdf:Property ;
+    rdfs:label "PSREvent.status"@en ;
+    rdfs:domain cim:PSREvent .
+
+cim:PSREvent.type a rdf:Property ;
+    rdfs:label "PSREvent.type"@en ;
+    rdfs:domain cim:PSREvent .
+
+cim:Person.createdDateTime a rdf:Property ;
+    rdfs:label "Person.createdDateTime"@en ;
+    rdfs:domain cim:Person .
+
+cim:Person.firstName a rdf:Property ;
+    rdfs:label "Person.firstName"@en ;
+    rdfs:domain cim:Person .
+
+cim:Person.lastName a rdf:Property ;
+    rdfs:label "Person.lastName"@en ;
+    rdfs:domain cim:Person .
+
+cim:Person.mName a rdf:Property ;
+    rdfs:label "Person.mName"@en ;
+    rdfs:domain cim:Person .
+
+cim:Person.status a rdf:Property ;
+    rdfs:label "Person.status"@en ;
+    rdfs:domain cim:Person .
+
+cim:PlannedOutage.createdDateTime a rdf:Property ;
+    rdfs:label "PlannedOutage.createdDateTime"@en ;
+    rdfs:domain cim:PlannedOutage .
+
+cim:PlannedOutage.status a rdf:Property ;
+    rdfs:label "PlannedOutage.status"@en ;
+    rdfs:domain cim:PlannedOutage .
+
+cim:PlannedOutage.type a rdf:Property ;
+    rdfs:label "PlannedOutage.type"@en ;
+    rdfs:domain cim:PlannedOutage .
+
+cim:Plant.createdDateTime a rdf:Property ;
+    rdfs:label "Plant.createdDateTime"@en ;
+    rdfs:domain cim:Plant .
+
+cim:Plant.kind a rdf:Property ;
+    rdfs:label "Plant.kind"@en ;
+    rdfs:domain cim:Plant .
+
+cim:Plant.status a rdf:Property ;
+    rdfs:label "Plant.status"@en ;
+    rdfs:domain cim:Plant .
+
+cim:Pnode.createdDateTime a rdf:Property ;
+    rdfs:label "Pnode.createdDateTime"@en ;
+    rdfs:domain cim:Pnode .
+
+cim:Pnode.kind a rdf:Property ;
+    rdfs:label "Pnode.kind"@en ;
+    rdfs:domain cim:Pnode .
+
+cim:Pnode.status a rdf:Property ;
+    rdfs:label "Pnode.status"@en ;
+    rdfs:domain cim:Pnode .
+
+cim:PositionPoint.groupNumber a rdf:Property ;
+    rdfs:label "PositionPoint.groupNumber"@en ;
+    rdfs:domain cim:PositionPoint .
+
+cim:PositionPoint.sequenceNumber a rdf:Property ;
+    rdfs:label "PositionPoint.sequenceNumber"@en ;
+    rdfs:domain cim:PositionPoint .
+
+cim:PositionPoint.xPosition a rdf:Property ;
+    rdfs:label "PositionPoint.xPosition"@en ;
+    rdfs:domain cim:PositionPoint .
+
+cim:PositionPoint.yPosition a rdf:Property ;
+    rdfs:label "PositionPoint.yPosition"@en ;
+    rdfs:domain cim:PositionPoint .
+
+cim:PositionPoint.zPosition a rdf:Property ;
+    rdfs:label "PositionPoint.zPosition"@en ;
+    rdfs:domain cim:PositionPoint .
+
+cim:PowerElectronicsConnection.createdDateTime a rdf:Property ;
+    rdfs:label "PowerElectronicsConnection.createdDateTime"@en ;
+    rdfs:domain cim:PowerElectronicsConnection .
+
+cim:PowerElectronicsConnection.kind a rdf:Property ;
+    rdfs:label "PowerElectronicsConnection.kind"@en ;
+    rdfs:domain cim:PowerElectronicsConnection .
+
+cim:PowerElectronicsConnection.status a rdf:Property ;
+    rdfs:label "PowerElectronicsConnection.status"@en ;
+    rdfs:domain cim:PowerElectronicsConnection .
+
+cim:PowerSystemResource.createdDateTime a rdf:Property ;
+    rdfs:label "PowerSystemResource.createdDateTime"@en ;
+    rdfs:domain cim:PowerSystemResource .
+
+cim:PowerSystemResource.kind a rdf:Property ;
+    rdfs:label "PowerSystemResource.kind"@en ;
+    rdfs:domain cim:PowerSystemResource .
+
+cim:PowerSystemResource.status a rdf:Property ;
+    rdfs:label "PowerSystemResource.status"@en ;
+    rdfs:domain cim:PowerSystemResource .
+
+cim:PowerTransformer.createdDateTime a rdf:Property ;
+    rdfs:label "PowerTransformer.createdDateTime"@en ;
+    rdfs:domain cim:PowerTransformer .
+
+cim:PowerTransformer.kind a rdf:Property ;
+    rdfs:label "PowerTransformer.kind"@en ;
+    rdfs:domain cim:PowerTransformer .
+
+cim:PowerTransformer.status a rdf:Property ;
+    rdfs:label "PowerTransformer.status"@en ;
+    rdfs:domain cim:PowerTransformer .
+
+cim:PowerTransformerEnd.ratedS a rdf:Property ;
+    rdfs:label "PowerTransformerEnd.ratedS"@en ;
+    rdfs:domain cim:PowerTransformerEnd .
+
+cim:Priority.rank a rdf:Property ;
+    rdfs:label "Priority.rank"@en ;
+    rdfs:domain cim:Priority .
+
+cim:Procedure.createdDateTime a rdf:Property ;
+    rdfs:label "Procedure.createdDateTime"@en ;
+    rdfs:domain cim:Procedure .
+
+cim:Procedure.status a rdf:Property ;
+    rdfs:label "Procedure.status"@en ;
+    rdfs:domain cim:Procedure .
+
+cim:Procedure.type a rdf:Property ;
+    rdfs:label "Procedure.type"@en ;
+    rdfs:domain cim:Procedure .
+
+cim:ProductAssetModel.modelNumber a rdf:Property ;
+    rdfs:label "ProductAssetModel.modelNumber"@en ;
+    rdfs:domain cim:ProductAssetModel .
+
+cim:ProductAssetModel.modelVersion a rdf:Property ;
+    rdfs:label "ProductAssetModel.modelVersion"@en ;
+    rdfs:domain cim:ProductAssetModel .
+
+cim:Project.createdDateTime a rdf:Property ;
+    rdfs:label "Project.createdDateTime"@en ;
+    rdfs:domain cim:Project .
+
+cim:Project.kind a rdf:Property ;
+    rdfs:label "Project.kind"@en ;
+    rdfs:domain cim:Project .
+
+cim:Project.status a rdf:Property ;
+    rdfs:label "Project.status"@en ;
+    rdfs:domain cim:Project .
+
+cim:Project.type a rdf:Property ;
+    rdfs:label "Project.type"@en ;
+    rdfs:domain cim:Project .
+
+cim:ProtectedSwitch.createdDateTime a rdf:Property ;
+    rdfs:label "ProtectedSwitch.createdDateTime"@en ;
+    rdfs:domain cim:ProtectedSwitch .
+
+cim:ProtectedSwitch.kind a rdf:Property ;
+    rdfs:label "ProtectedSwitch.kind"@en ;
+    rdfs:domain cim:ProtectedSwitch .
+
+cim:ProtectedSwitch.status a rdf:Property ;
+    rdfs:label "ProtectedSwitch.status"@en ;
+    rdfs:domain cim:ProtectedSwitch .
+
+cim:ProtectionEquipment.kind a rdf:Property ;
+    rdfs:label "ProtectionEquipment.kind"@en ;
+    rdfs:domain cim:ProtectionEquipment .
+
+cim:ProtectionEquipment.status a rdf:Property ;
+    rdfs:label "ProtectionEquipment.status"@en ;
+    rdfs:domain cim:ProtectionEquipment .
+
+cim:Reading.createdDateTime a rdf:Property ;
+    rdfs:label "Reading.createdDateTime"@en ;
+    rdfs:domain cim:Reading .
+
+cim:Reading.kind a rdf:Property ;
+    rdfs:label "Reading.kind"@en ;
+    rdfs:domain cim:Reading .
+
+cim:Reading.status a rdf:Property ;
+    rdfs:label "Reading.status"@en ;
+    rdfs:domain cim:Reading .
+
+cim:ReadingQuality.createdDateTime a rdf:Property ;
+    rdfs:label "ReadingQuality.createdDateTime"@en ;
+    rdfs:domain cim:ReadingQuality .
+
+cim:ReadingQuality.kind a rdf:Property ;
+    rdfs:label "ReadingQuality.kind"@en ;
+    rdfs:domain cim:ReadingQuality .
+
+cim:ReadingQuality.status a rdf:Property ;
+    rdfs:label "ReadingQuality.status"@en ;
+    rdfs:domain cim:ReadingQuality .
+
+cim:ReadingQuality.typeRef a rdf:Property ;
+    rdfs:label "ReadingQuality.typeRef"@en ;
+    rdfs:domain cim:ReadingQuality .
+
+cim:ReadingType.unit a rdf:Property ;
+    rdfs:label "ReadingType.unit"@en ;
+    rdfs:domain cim:ReadingType .
+
+cim:Register.createdDateTime a rdf:Property ;
+    rdfs:label "Register.createdDateTime"@en ;
+    rdfs:domain cim:Register .
+
+cim:Register.kind a rdf:Property ;
+    rdfs:label "Register.kind"@en ;
+    rdfs:domain cim:Register .
+
+cim:Register.status a rdf:Property ;
+    rdfs:label "Register.status"@en ;
+    rdfs:domain cim:Register .
+
+cim:RegisteredLoad.createdDateTime a rdf:Property ;
+    rdfs:label "RegisteredLoad.createdDateTime"@en ;
+    rdfs:domain cim:RegisteredLoad .
+
+cim:RegisteredLoad.kind a rdf:Property ;
+    rdfs:label "RegisteredLoad.kind"@en ;
+    rdfs:domain cim:RegisteredLoad .
+
+cim:RegisteredLoad.status a rdf:Property ;
+    rdfs:label "RegisteredLoad.status"@en ;
+    rdfs:domain cim:RegisteredLoad .
+
+cim:RegularIntervalSchedule.createdDateTime a rdf:Property ;
+    rdfs:label "RegularIntervalSchedule.createdDateTime"@en ;
+    rdfs:domain cim:RegularIntervalSchedule .
+
+cim:RegularIntervalSchedule.kind a rdf:Property ;
+    rdfs:label "RegularIntervalSchedule.kind"@en ;
+    rdfs:domain cim:RegularIntervalSchedule .
+
+cim:RegularIntervalSchedule.status a rdf:Property ;
+    rdfs:label "RegularIntervalSchedule.status"@en ;
+    rdfs:domain cim:RegularIntervalSchedule .
+
+cim:RegularTimePoint.createdDateTime a rdf:Property ;
+    rdfs:label "RegularTimePoint.createdDateTime"@en ;
+    rdfs:domain cim:RegularTimePoint .
+
+cim:RegularTimePoint.kind a rdf:Property ;
+    rdfs:label "RegularTimePoint.kind"@en ;
+    rdfs:domain cim:RegularTimePoint .
+
+cim:RegularTimePoint.status a rdf:Property ;
+    rdfs:label "RegularTimePoint.status"@en ;
+    rdfs:domain cim:RegularTimePoint .
+
+cim:RegulatingCondEq.createdDateTime a rdf:Property ;
+    rdfs:label "RegulatingCondEq.createdDateTime"@en ;
+    rdfs:domain cim:RegulatingCondEq .
+
+cim:RegulatingCondEq.kind a rdf:Property ;
+    rdfs:label "RegulatingCondEq.kind"@en ;
+    rdfs:domain cim:RegulatingCondEq .
+
+cim:RegulatingCondEq.status a rdf:Property ;
+    rdfs:label "RegulatingCondEq.status"@en ;
+    rdfs:domain cim:RegulatingCondEq .
+
+cim:RemoteUnit.createdDateTime a rdf:Property ;
+    rdfs:label "RemoteUnit.createdDateTime"@en ;
+    rdfs:domain cim:RemoteUnit .
+
+cim:RemoteUnit.kind a rdf:Property ;
+    rdfs:label "RemoteUnit.kind"@en ;
+    rdfs:domain cim:RemoteUnit .
+
+cim:RemoteUnit.status a rdf:Property ;
+    rdfs:label "RemoteUnit.status"@en ;
+    rdfs:domain cim:RemoteUnit .
+
+cim:Request.createdDateTime a rdf:Property ;
+    rdfs:label "Request.createdDateTime"@en ;
+    rdfs:domain cim:Request .
+
+cim:Request.status a rdf:Property ;
+    rdfs:label "Request.status"@en ;
+    rdfs:domain cim:Request .
+
+cim:Request.type a rdf:Property ;
+    rdfs:label "Request.type"@en ;
+    rdfs:domain cim:Request .
+
+cim:ResourceAwardInstruction.createdDateTime a rdf:Property ;
+    rdfs:label "ResourceAwardInstruction.createdDateTime"@en ;
+    rdfs:domain cim:ResourceAwardInstruction .
+
+cim:ResourceAwardInstruction.kind a rdf:Property ;
+    rdfs:label "ResourceAwardInstruction.kind"@en ;
+    rdfs:domain cim:ResourceAwardInstruction .
+
+cim:ResourceAwardInstruction.status a rdf:Property ;
+    rdfs:label "ResourceAwardInstruction.status"@en ;
+    rdfs:domain cim:ResourceAwardInstruction .
+
+cim:ResourceBid.createdDateTime a rdf:Property ;
+    rdfs:label "ResourceBid.createdDateTime"@en ;
+    rdfs:domain cim:ResourceBid .
+
+cim:ResourceBid.status a rdf:Property ;
+    rdfs:label "ResourceBid.status"@en ;
+    rdfs:domain cim:ResourceBid .
+
+cim:ResourceBid.type a rdf:Property ;
+    rdfs:label "ResourceBid.type"@en ;
+    rdfs:domain cim:ResourceBid .
+
+cim:RightOfWay.createdDateTime a rdf:Property ;
+    rdfs:label "RightOfWay.createdDateTime"@en ;
+    rdfs:domain cim:RightOfWay .
+
+cim:RightOfWay.status a rdf:Property ;
+    rdfs:label "RightOfWay.status"@en ;
+    rdfs:domain cim:RightOfWay .
+
+cim:RightOfWay.type a rdf:Property ;
+    rdfs:label "RightOfWay.type"@en ;
+    rdfs:domain cim:RightOfWay .
+
+cim:RiskScore.createdDateTime a rdf:Property ;
+    rdfs:label "RiskScore.createdDateTime"@en ;
+    rdfs:domain cim:RiskScore .
+
+cim:RiskScore.kind a rdf:Property ;
+    rdfs:label "RiskScore.kind"@en ;
+    rdfs:domain cim:RiskScore .
+
+cim:RiskScore.status a rdf:Property ;
+    rdfs:label "RiskScore.status"@en ;
+    rdfs:domain cim:RiskScore .
+
+cim:SchedulingCoordinator.createdDateTime a rdf:Property ;
+    rdfs:label "SchedulingCoordinator.createdDateTime"@en ;
+    rdfs:domain cim:SchedulingCoordinator .
+
+cim:SchedulingCoordinator.kind a rdf:Property ;
+    rdfs:label "SchedulingCoordinator.kind"@en ;
+    rdfs:domain cim:SchedulingCoordinator .
+
+cim:SecurityConstraints.createdDateTime a rdf:Property ;
+    rdfs:label "SecurityConstraints.createdDateTime"@en ;
+    rdfs:domain cim:SecurityConstraints .
+
+cim:SecurityConstraints.kind a rdf:Property ;
+    rdfs:label "SecurityConstraints.kind"@en ;
+    rdfs:domain cim:SecurityConstraints .
+
+cim:SecurityConstraints.status a rdf:Property ;
+    rdfs:label "SecurityConstraints.status"@en ;
+    rdfs:domain cim:SecurityConstraints .
+
+cim:ServiceGuarantee.createdDateTime a rdf:Property ;
+    rdfs:label "ServiceGuarantee.createdDateTime"@en ;
+    rdfs:domain cim:ServiceGuarantee .
+
+cim:ServiceGuarantee.status a rdf:Property ;
+    rdfs:label "ServiceGuarantee.status"@en ;
+    rdfs:domain cim:ServiceGuarantee .
+
+cim:ServiceGuarantee.type a rdf:Property ;
+    rdfs:label "ServiceGuarantee.type"@en ;
+    rdfs:domain cim:ServiceGuarantee .
+
+cim:ServiceLocation.createdDateTime a rdf:Property ;
+    rdfs:label "ServiceLocation.createdDateTime"@en ;
+    rdfs:domain cim:ServiceLocation .
+
+cim:ServiceLocation.status a rdf:Property ;
+    rdfs:label "ServiceLocation.status"@en ;
+    rdfs:domain cim:ServiceLocation .
+
+cim:ServiceLocation.type a rdf:Property ;
+    rdfs:label "ServiceLocation.type"@en ;
+    rdfs:domain cim:ServiceLocation .
+
+cim:ServicePoint.createdDateTime a rdf:Property ;
+    rdfs:label "ServicePoint.createdDateTime"@en ;
+    rdfs:domain cim:ServicePoint .
+
+cim:ServicePoint.kind a rdf:Property ;
+    rdfs:label "ServicePoint.kind"@en ;
+    rdfs:domain cim:ServicePoint .
+
+cim:ServicePoint.status a rdf:Property ;
+    rdfs:label "ServicePoint.status"@en ;
+    rdfs:domain cim:ServicePoint .
+
+cim:Settlement.createdDateTime a rdf:Property ;
+    rdfs:label "Settlement.createdDateTime"@en ;
+    rdfs:domain cim:Settlement .
+
+cim:Settlement.status a rdf:Property ;
+    rdfs:label "Settlement.status"@en ;
+    rdfs:domain cim:Settlement .
+
+cim:Settlement.type a rdf:Property ;
+    rdfs:label "Settlement.type"@en ;
+    rdfs:domain cim:Settlement .
+
+cim:Skill.createdDateTime a rdf:Property ;
+    rdfs:label "Skill.createdDateTime"@en ;
+    rdfs:domain cim:Skill .
+
+cim:Skill.kind a rdf:Property ;
+    rdfs:label "Skill.kind"@en ;
+    rdfs:domain cim:Skill .
+
+cim:Skill.status a rdf:Property ;
+    rdfs:label "Skill.status"@en ;
+    rdfs:domain cim:Skill .
+
+cim:Skill.type a rdf:Property ;
+    rdfs:label "Skill.type"@en ;
+    rdfs:domain cim:Skill .
+
+cim:StartupModel.createdDateTime a rdf:Property ;
+    rdfs:label "StartupModel.createdDateTime"@en ;
+    rdfs:domain cim:StartupModel .
+
+cim:StartupModel.kind a rdf:Property ;
+    rdfs:label "StartupModel.kind"@en ;
+    rdfs:domain cim:StartupModel .
+
+cim:StartupModel.status a rdf:Property ;
+    rdfs:label "StartupModel.status"@en ;
+    rdfs:domain cim:StartupModel .
+
+cim:StateVariable.createdDateTime a rdf:Property ;
+    rdfs:label "StateVariable.createdDateTime"@en ;
+    rdfs:domain cim:StateVariable .
+
+cim:StreetAddress.createdDateTime a rdf:Property ;
+    rdfs:label "StreetAddress.createdDateTime"@en ;
+    rdfs:domain cim:StreetAddress .
+
+cim:StreetAddress.kind a rdf:Property ;
+    rdfs:label "StreetAddress.kind"@en ;
+    rdfs:domain cim:StreetAddress .
+
+cim:StreetAddress.postalCode a rdf:Property ;
+    rdfs:label "StreetAddress.postalCode"@en ;
+    rdfs:domain cim:StreetAddress .
+
+cim:StreetAddress.status a rdf:Property ;
+    rdfs:label "StreetAddress.status"@en ;
+    rdfs:domain cim:StreetAddress .
+
+cim:StreetDetail.addressGeneral a rdf:Property ;
+    rdfs:label "StreetDetail.addressGeneral"@en ;
+    rdfs:domain cim:StreetDetail .
+
+cim:SubGeographicalRegion.createdDateTime a rdf:Property ;
+    rdfs:label "SubGeographicalRegion.createdDateTime"@en ;
+    rdfs:domain cim:SubGeographicalRegion .
+
+cim:SubGeographicalRegion.kind a rdf:Property ;
+    rdfs:label "SubGeographicalRegion.kind"@en ;
+    rdfs:domain cim:SubGeographicalRegion .
+
+cim:SubGeographicalRegion.status a rdf:Property ;
+    rdfs:label "SubGeographicalRegion.status"@en ;
+    rdfs:domain cim:SubGeographicalRegion .
+
+cim:SubLoadArea.createdDateTime a rdf:Property ;
+    rdfs:label "SubLoadArea.createdDateTime"@en ;
+    rdfs:domain cim:SubLoadArea .
+
+cim:SubLoadArea.kind a rdf:Property ;
+    rdfs:label "SubLoadArea.kind"@en ;
+    rdfs:domain cim:SubLoadArea .
+
+cim:SubLoadArea.status a rdf:Property ;
+    rdfs:label "SubLoadArea.status"@en ;
+    rdfs:domain cim:SubLoadArea .
+
+cim:Substation.createdDateTime a rdf:Property ;
+    rdfs:label "Substation.createdDateTime"@en ;
+    rdfs:domain cim:Substation .
+
+cim:Substation.kind a rdf:Property ;
+    rdfs:label "Substation.kind"@en ;
+    rdfs:domain cim:Substation .
+
+cim:Substation.status a rdf:Property ;
+    rdfs:label "Substation.status"@en ;
+    rdfs:domain cim:Substation .
+
+cim:Switch.normalOpen a rdf:Property ;
+    rdfs:label "Switch.normalOpen"@en ;
+    rdfs:domain cim:Switch .
+
+cim:SwitchingAction.createdDateTime a rdf:Property ;
+    rdfs:label "SwitchingAction.createdDateTime"@en ;
+    rdfs:domain cim:SwitchingAction .
+
+cim:SwitchingAction.kind a rdf:Property ;
+    rdfs:label "SwitchingAction.kind"@en ;
+    rdfs:domain cim:SwitchingAction .
+
+cim:SwitchingAction.status a rdf:Property ;
+    rdfs:label "SwitchingAction.status"@en ;
+    rdfs:domain cim:SwitchingAction .
+
+cim:SwitchingPlan.createdDateTime a rdf:Property ;
+    rdfs:label "SwitchingPlan.createdDateTime"@en ;
+    rdfs:domain cim:SwitchingPlan .
+
+cim:SwitchingPlan.kind a rdf:Property ;
+    rdfs:label "SwitchingPlan.kind"@en ;
+    rdfs:domain cim:SwitchingPlan .
+
+cim:SwitchingPlan.status a rdf:Property ;
+    rdfs:label "SwitchingPlan.status"@en ;
+    rdfs:domain cim:SwitchingPlan .
+
+cim:Tariff.createdDateTime a rdf:Property ;
+    rdfs:label "Tariff.createdDateTime"@en ;
+    rdfs:domain cim:Tariff .
+
+cim:Tariff.status a rdf:Property ;
+    rdfs:label "Tariff.status"@en ;
+    rdfs:domain cim:Tariff .
+
+cim:Tariff.type a rdf:Property ;
+    rdfs:label "Tariff.type"@en ;
+    rdfs:domain cim:Tariff .
+
+cim:TelephoneNumber.ituPhone a rdf:Property ;
+    rdfs:label "TelephoneNumber.ituPhone"@en ;
+    rdfs:domain cim:TelephoneNumber .
+
+cim:Terminal.ConductingEquipment a rdf:Property ;
+    rdfs:label "Terminal.ConductingEquipment"@en ;
+    rdfs:domain cim:Terminal .
+
+cim:Terminal.phases a rdf:Property ;
+    rdfs:label "Terminal.phases"@en ;
+    rdfs:domain cim:Terminal .
+
+cim:TestDataSet.createdDateTime a rdf:Property ;
+    rdfs:label "TestDataSet.createdDateTime"@en ;
+    rdfs:domain cim:TestDataSet .
+
+cim:TestDataSet.kind a rdf:Property ;
+    rdfs:label "TestDataSet.kind"@en ;
+    rdfs:domain cim:TestDataSet .
+
+cim:TestDataSet.status a rdf:Property ;
+    rdfs:label "TestDataSet.status"@en ;
+    rdfs:domain cim:TestDataSet .
+
+cim:TimeSchedule.createdDateTime a rdf:Property ;
+    rdfs:label "TimeSchedule.createdDateTime"@en ;
+    rdfs:domain cim:TimeSchedule .
+
+cim:TimeSchedule.status a rdf:Property ;
+    rdfs:label "TimeSchedule.status"@en ;
+    rdfs:domain cim:TimeSchedule .
+
+cim:TimeSchedule.type a rdf:Property ;
+    rdfs:label "TimeSchedule.type"@en ;
+    rdfs:domain cim:TimeSchedule .
+
+cim:TimeTariffInterval.createdDateTime a rdf:Property ;
+    rdfs:label "TimeTariffInterval.createdDateTime"@en ;
+    rdfs:domain cim:TimeTariffInterval .
+
+cim:TimeTariffInterval.kind a rdf:Property ;
+    rdfs:label "TimeTariffInterval.kind"@en ;
+    rdfs:domain cim:TimeTariffInterval .
+
+cim:TimeTariffInterval.status a rdf:Property ;
+    rdfs:label "TimeTariffInterval.status"@en ;
+    rdfs:domain cim:TimeTariffInterval .
+
+cim:TopologicalIsland.createdDateTime a rdf:Property ;
+    rdfs:label "TopologicalIsland.createdDateTime"@en ;
+    rdfs:domain cim:TopologicalIsland .
+
+cim:TopologicalIsland.status a rdf:Property ;
+    rdfs:label "TopologicalIsland.status"@en ;
+    rdfs:domain cim:TopologicalIsland .
+
+cim:TopologicalNode.createdDateTime a rdf:Property ;
+    rdfs:label "TopologicalNode.createdDateTime"@en ;
+    rdfs:domain cim:TopologicalNode .
+
+cim:TopologicalNode.kind a rdf:Property ;
+    rdfs:label "TopologicalNode.kind"@en ;
+    rdfs:domain cim:TopologicalNode .
+
+cim:TopologicalNode.status a rdf:Property ;
+    rdfs:label "TopologicalNode.status"@en ;
+    rdfs:domain cim:TopologicalNode .
+
+cim:TownDetail.country a rdf:Property ;
+    rdfs:label "TownDetail.country"@en ;
+    rdfs:domain cim:TownDetail .
+
+cim:TownDetail.name a rdf:Property ;
+    rdfs:label "TownDetail.name"@en ;
+    rdfs:domain cim:TownDetail .
+
+cim:TownDetail.section a rdf:Property ;
+    rdfs:label "TownDetail.section"@en ;
+    rdfs:domain cim:TownDetail .
+
+cim:TownDetail.stateOrProvince a rdf:Property ;
+    rdfs:label "TownDetail.stateOrProvince"@en ;
+    rdfs:domain cim:TownDetail .
+
+cim:Trade.createdDateTime a rdf:Property ;
+    rdfs:label "Trade.createdDateTime"@en ;
+    rdfs:domain cim:Trade .
+
+cim:Trade.kind a rdf:Property ;
+    rdfs:label "Trade.kind"@en ;
+    rdfs:domain cim:Trade .
+
+cim:Trade.status a rdf:Property ;
+    rdfs:label "Trade.status"@en ;
+    rdfs:domain cim:Trade .
+
+cim:Transaction.createdDateTime a rdf:Property ;
+    rdfs:label "Transaction.createdDateTime"@en ;
+    rdfs:domain cim:Transaction .
+
+cim:Transaction.kind a rdf:Property ;
+    rdfs:label "Transaction.kind"@en ;
+    rdfs:domain cim:Transaction .
+
+cim:Transaction.status a rdf:Property ;
+    rdfs:label "Transaction.status"@en ;
+    rdfs:domain cim:Transaction .
+
+cim:TransmissionPath.createdDateTime a rdf:Property ;
+    rdfs:label "TransmissionPath.createdDateTime"@en ;
+    rdfs:domain cim:TransmissionPath .
+
+cim:TransmissionPath.kind a rdf:Property ;
+    rdfs:label "TransmissionPath.kind"@en ;
+    rdfs:domain cim:TransmissionPath .
+
+cim:TransmissionPath.status a rdf:Property ;
+    rdfs:label "TransmissionPath.status"@en ;
+    rdfs:domain cim:TransmissionPath .
+
+cim:TransmissionReservation.createdDateTime a rdf:Property ;
+    rdfs:label "TransmissionReservation.createdDateTime"@en ;
+    rdfs:domain cim:TransmissionReservation .
+
+cim:TransmissionReservation.kind a rdf:Property ;
+    rdfs:label "TransmissionReservation.kind"@en ;
+    rdfs:domain cim:TransmissionReservation .
+
+cim:TransmissionReservation.status a rdf:Property ;
+    rdfs:label "TransmissionReservation.status"@en ;
+    rdfs:domain cim:TransmissionReservation .
+
+cim:TroubleTicket.createdDateTime a rdf:Property ;
+    rdfs:label "TroubleTicket.createdDateTime"@en ;
+    rdfs:domain cim:TroubleTicket .
+
+cim:TroubleTicket.status a rdf:Property ;
+    rdfs:label "TroubleTicket.status"@en ;
+    rdfs:domain cim:TroubleTicket .
+
+cim:TroubleTicket.type a rdf:Property ;
+    rdfs:label "TroubleTicket.type"@en ;
+    rdfs:domain cim:TroubleTicket .
+
+cim:UsagePoint.createdDateTime a rdf:Property ;
+    rdfs:label "UsagePoint.createdDateTime"@en ;
+    rdfs:domain cim:UsagePoint .
+
+cim:UsagePoint.kind a rdf:Property ;
+    rdfs:label "UsagePoint.kind"@en ;
+    rdfs:domain cim:UsagePoint .
+
+cim:UsagePoint.status a rdf:Property ;
+    rdfs:label "UsagePoint.status"@en ;
+    rdfs:domain cim:UsagePoint .
+
+cim:WeatherStation.kind a rdf:Property ;
+    rdfs:label "WeatherStation.kind"@en ;
+    rdfs:domain cim:WeatherStation .
+
+cim:WeatherStation.status a rdf:Property ;
+    rdfs:label "WeatherStation.status"@en ;
+    rdfs:domain cim:WeatherStation .
+
+cim:Work.createdDateTime a rdf:Property ;
+    rdfs:label "Work.createdDateTime"@en ;
+    rdfs:domain cim:Work .
+
+cim:Work.status a rdf:Property ;
+    rdfs:label "Work.status"@en ;
+    rdfs:domain cim:Work .
+
+cim:Work.type a rdf:Property ;
+    rdfs:label "Work.type"@en ;
+    rdfs:domain cim:Work .
+
+cim:WorkCostDetail.createdDateTime a rdf:Property ;
+    rdfs:label "WorkCostDetail.createdDateTime"@en ;
+    rdfs:domain cim:WorkCostDetail .
+
+cim:WorkCostDetail.type a rdf:Property ;
+    rdfs:label "WorkCostDetail.type"@en ;
+    rdfs:domain cim:WorkCostDetail .
+
+cim:WorkLocation.createdDateTime a rdf:Property ;
+    rdfs:label "WorkLocation.createdDateTime"@en ;
+    rdfs:domain cim:WorkLocation .
+
+cim:WorkLocation.status a rdf:Property ;
+    rdfs:label "WorkLocation.status"@en ;
+    rdfs:domain cim:WorkLocation .
+
+cim:WorkLocation.type a rdf:Property ;
+    rdfs:label "WorkLocation.type"@en ;
+    rdfs:domain cim:WorkLocation .
+
+cim:WorkTask.createdDateTime a rdf:Property ;
+    rdfs:label "WorkTask.createdDateTime"@en ;
+    rdfs:domain cim:WorkTask .
+
+cim:WorkTask.status a rdf:Property ;
+    rdfs:label "WorkTask.status"@en ;
+    rdfs:domain cim:WorkTask .
+
+cim:WorkTimeSchedule.createdDateTime a rdf:Property ;
+    rdfs:label "WorkTimeSchedule.createdDateTime"@en ;
+    rdfs:domain cim:WorkTimeSchedule .
+
+cim:WorkTimeSchedule.status a rdf:Property ;
+    rdfs:label "WorkTimeSchedule.status"@en ;
+    rdfs:domain cim:WorkTimeSchedule .
+
+cim:WorkTimeSchedule.type a rdf:Property ;
+    rdfs:label "WorkTimeSchedule.type"@en ;
+    rdfs:domain cim:WorkTimeSchedule .
+

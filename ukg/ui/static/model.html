@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model and CIM Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/vendor/vis-network.css">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <h1>Model &amp; CIM explorer</h1>
+      <p class="sub" id="m-sub">How every in-scope table, column and relationship is aligned to the IEC Common Information Model</p>
+    </div>
+  </div>
+  <dl class="kpis" id="m-kpis"></dl>
+</header>
+<main class="model-main">
+  <section class="pane" aria-label="Classes">
+    <div class="pane-head"><h2>Classes by subject area</h2><button type="button" class="ghost" id="overview">Overview</button></div>
+    <label class="sr" for="m-filter">Filter classes</label>
+    <input id="m-filter" type="search" placeholder="Filter, e.g. transformer, Outage, IEC61970" style="margin:8px 10px 0;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2);font:inherit">
+    <div class="class-list" id="m-list"></div>
+  </section>
+  <section class="pane class-detail" aria-label="Class detail">
+    <div class="class-head" id="m-head"></div>
+    <div id="class-net"><div id="m-net" style="position:absolute;inset:0"></div><div class="node-card" id="m-card" hidden></div>
+      <div class="legend" id="m-legend"></div></div>
+    <div class="class-tables" id="m-tables"></div>
+  </section>
+</main>
+<script src="/vendor/vis-network.min.js"></script>
+<script src="/static/common.js"></script>
+<script src="/static/graph.js"></script>
+<script src="/static/model.js"></script>
+</body>
+</html>

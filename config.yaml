@@ -1,0 +1,377 @@
+# =============================================================================
+# Utility Knowledge Graph v3 - configuration
+#
+# The application starts from three inputs only: DDL files, ontology (TTL) files
+# and data files. Everything below tells the generic pipeline how to read them.
+# To plug in another data model: point `input` at its files, adjust `scope`, and
+# (if its ontology uses other annotation names) the `ontology.annotations` block.
+# Secrets and host settings (Neo4j, LLM, embeddings) live in .env.
+# Relative paths are resolved against the directory of this file.
+# =============================================================================
+
+project:
+  name: Utility Knowledge Graph Explorer
+  subtitle: CIM-aligned asset, network, GIS and outage knowledge graph
+  # Used in the answer prompt ("You are a <persona> ...").
+  persona: utility grid operations and asset-management analyst
+
+# -----------------------------------------------------------------------------
+# Inputs (read-only). Nothing is generated or downloaded by the application.
+# -----------------------------------------------------------------------------
+input:
+  ddl: [input/data_model/ddl/*.sql]
+  ddl_default_schema: default          # schema for one-part table names
+  ontology:                            # parsed together as one RDF graph
+    - input/data_model/ttl/cmm_silver_ontology.ttl
+    - input/data_model/ttl/cim_reference_subset.ttl
+    - input/data_model/ttl/cmm_subject_areas.skos.ttl
+    - input/data_model/ttl/cmm_geosparql_alignment.ttl
+  data:
+    dir: input/data
+    path_template: "{schema}/{table}.csv"   # also supports {schema}.{table}.jsonl etc.
+    format: csv                              # csv | jsonl
+    encoding: utf-8
+    null_values: ["", "NULL", "null", "None", "NaN"]
+
+# -----------------------------------------------------------------------------
+# Scope: subject area (DDL schema) -> tables. "*" = every table of the schema
+# that has a data file. FKs are kept when both ends are in scope.
+# -----------------------------------------------------------------------------
+scope:
+  domains:
+    asset: [registry, class, hierarchy, inspection, failure_event, work_order, maintenance_plan, asset_risk_assessment]
+    distribution: [distribution_substation, feeder, network_segment, transformer, sectionalizing_device, capacitor_bank,
+                   der_interconnection_point, service_territory, distribution_reliability_event,
+                   distribution_switching_order, distribution_switching_step]
+    transmission: [transmission_substation, line, power_transformer, protection_device, right_of_way_corridor, transmission_outage]
+    gis: [coordinate_system, location, position_point, location_assignment, geographical_region, connectivity_node,
+          terminal, network_feature, network_association, linear_reference]
+    outage: [event, cause, interruption, call, outage_crew_dispatch, restoration_action, storm_event, damage_assessment,
+             etr_revision, safety_clearance, segment_impact]
+  skip_tables_without_data: true
+
+# -----------------------------------------------------------------------------
+# Ontology extraction. Prefixed names (cmm:, dcterms:...) use the prefixes
+# declared in the TTL files. Each resolution list is tried in order.
+# -----------------------------------------------------------------------------
+ontology:
+  namespace: auto                # auto = vann:preferredNamespaceUri of the owl:Ontology, else the most used namespace
+  class_resolution: [annotation, pascal_case]          # annotation = physical_table; pascal_case = feeder -> Feeder
+  property_resolution: [annotation, class_dot_camel, camel_case]
+  fk_resolution: [fk_constraint, annotation, name]      # how an FK finds its object property
+  annotations:
+    physical_table: cmm:physicalTable       # "<catalog>.<schema>.<table>" (suffix match)
+    physical_column: cmm:physicalColumn
+    fk_constraint: cmm:fkConstraint
+    mapping_level: cmm:cimMappingLevel
+    package: cmm:cimPackage
+    standard: cmm:cimStandard
+    association: cmm:cimAssociation
+    location_role: cmm:cimLocationRole
+    business_term: cmm:businessTerm
+    unit_symbol: cmm:unitSymbol
+    unit_multiplier: cmm:unitMultiplier
+    datatype: cmm:cimDatatype
+    classification: cmm:dataClassification
+    sensitivity: cmm:sensitivity
+    standard_reference: cmm:standardReference
+    subject: dcterms:subject
+  # Annotation properties that align a class/property with a standard term, and the match level they mean.
+  standard_matches:
+    cmm:cimExactMatch: exact
+    cmm:cimCloseMatch: close
+    cmm:cimBroadMatch: broad
+    cmm:cimExtends: extension
+  standard:
+    name: IEC CIM
+    short: CIM
+    namespace: "http://iec.ch/TC57/CIM100#"
+    root_class: IdentifiedObject
+    # Columns whose meaning is inherited from the standard root class.
+    column_overrides:
+      mrid: {attribute: IdentifiedObject.mRID, match: exact, description: "CIM IdentifiedObject.mRID - master resource identifier (UUID)"}
+  # Local classes that are generic roots (never chosen as "the" standard class of a table).
+  generic_roots: [cmm:CanonicalEntity]
+
+# -----------------------------------------------------------------------------
+# Graph model
+# -----------------------------------------------------------------------------
+graph:
+  label_from: ontology          # ontology = class local name (Feeder); table = PascalCase table name
+  relationship_naming: ontology # ontology = UPPER_SNAKE of the object property; column = FK column without _id
+  relationship_overrides:       # by ontology property (prefixed) or "schema.table.column"
+    cmm:hasLocation: HAS_LOCATION
+  exclude_columns: [cmm_row_hash, cmm_batch_id, cmm_insert_ts, cmm_update_ts, cmm_is_deleted, geometry_wkb]
+  batch_size: 500
+  # Standard alignment on every instance node:
+  #  * properties cim_class, cim_match, cim_package, cim_standard, subject_area, source_table
+  #  * extra labels CIM_<class> (and CIM_<superclass> when ancestors: true), e.g. (:CIM_PowerTransformer)
+  standard_properties: true
+  standard_labels: {enabled: true, prefix: "CIM_", ancestors: true}
+  # Ontology/CIM layer loaded next to the data: (:OntologyClass)-[:SPECIALIZES]->(:CimClass)-[:SUBCLASS_OF]->(:CimClass),
+  # (:OntologyClass)-[:HAS_PROPERTY]->(:OntologyProperty)-[:MAPS_TO]->(:CimAttribute), (:OntologyClass)-[:IN_SUBJECT_AREA]->(:SubjectArea),
+  # and (instance)-[:INSTANCE_OF]->(:OntologyClass).
+  semantic_layer: {enabled: true, properties: true, instance_links: true}
+  # Polymorphic references (table name + id columns, no FK) resolved into relationships.
+  polymorphic_links:
+    - {table: gis.terminal, table_column: conducting_equipment_table, id_column: conducting_equipment_id, type: CONDUCTING_EQUIPMENT, cim_association: Terminal.ConductingEquipment}
+    - {table: gis.network_feature, table_column: canonical_entity_table, id_column: canonical_entity_id, type: REPRESENTS, cim_association: PowerSystemResource (Esri UN feature)}
+    - {table: gis.connectivity_node, table_column: container_entity_table, id_column: container_entity_id, type: MEMBER_OF, cim_association: ConnectivityNode.ConnectivityNodeContainer}
+    - {table: gis.location_assignment, schema_column: entity_schema, table_column: entity_table, id_column: entity_id, type: ASSIGNED_TO, cim_association: PowerSystemResource.Location}
+    - {table: gis.linear_reference, table_column: referenced_entity_table, id_column: referenced_entity_id, type: LOCATES, cim_association: ISO 19148 linear reference}
+    - {table: gis.linear_reference, table_column: route_entity_table, id_column: route_entity_id, type: ALONG_ROUTE, cim_association: ISO 19148 linear reference}
+    - {table: gis.geographical_region, table_column: source_entity_table, id_column: source_entity_id, type: REGION_OF, cim_association: GeographicalRegion}
+  # Relationships derived after loading (any read/write Cypher; idempotent MERGE).
+  derived_relationships:
+    - name: FEEDS
+      description: "CIM topology processing: equipment A feeds B when A's load-side terminal (sequence 2) and B's source-side terminal (sequence 1) share a ConnectivityNode. Normally-open switches do not feed through."
+      cypher: |
+        MATCH (a)<-[:CONDUCTING_EQUIPMENT]-(ta:Terminal {sequence_number: 2})-[:CONNECTIVITY_NODE]->(n:ConnectivityNode)
+              <-[:CONNECTIVITY_NODE]-(tb:Terminal {sequence_number: 1})-[:CONDUCTING_EQUIPMENT]->(b)
+        WHERE a <> b AND coalesce(a.normal_position, 'closed') <> 'open'
+        MERGE (a)-[r:FEEDS]->(b)
+        SET r.derived = true, r.rule = 'terminal-connectivity', r.via_node = n.name, r.cim_association = 'Terminal.ConnectivityNode'
+    - name: REGISTERED_AS
+      description: "Identity link from network equipment to its asset master record (EAM), matched on asset tag or serial number."
+      cypher: |
+        MATCH (x:DistributionTransformer) WHERE x.asset_tag IS NOT NULL
+        MATCH (r:AssetRegistry {asset_tag: x.asset_tag})
+        MERGE (x)-[l:REGISTERED_AS]->(r) SET l.derived = true, l.rule = 'asset_tag', l.cim_association = 'PowerSystemResource.Assets'
+        WITH count(*) AS _
+        MATCH (x) WHERE (x:SectionalizingDevice OR x:CapacitorBank) AND x.serial_number IS NOT NULL
+        MATCH (r:AssetRegistry {serial_number: x.serial_number})
+        MERGE (x)-[l:REGISTERED_AS]->(r) SET l.derived = true, l.rule = 'serial_number', l.cim_association = 'PowerSystemResource.Assets'
+
+  # Node caption (visualisations, retrieved context, evidence matching). A property name or a
+  # template with {property} placeholders. Labels not listed use the first of auto_caption that exists.
+  auto_caption: [name, "*_number", "*_code", "*_name"]
+  caption_property:
+    AssetRegistry: asset_name
+    AssetClass: asset_class_name
+    AssetHierarchy: functional_location_code
+    AssetInspection: inspection_number
+    FailureEvent: failure_number
+    WorkOrder: work_order_number
+    MaintenancePlan: plan_number
+    AssetRiskAssessment: "Risk {risk_band} {assessment_date}"
+    DistributionSubstation: substation_name
+    TransmissionSubstation: substation_name
+    Feeder: feeder_code
+    NetworkSegment: segment_code
+    DistributionTransformer: adms_device_code
+    SectionalizingDevice: device_number
+    CapacitorBank: bank_number
+    DerInterconnectionPoint: poi_number
+    ServiceTerritory: territory_name
+    DistributionReliabilityEvent: event_number
+    DistributionSwitchingOrder: switching_order_number
+    DistributionSwitchingStep: "Step {step_sequence_number} {operation_type}"
+    TransmissionLine: line_code
+    PowerTransformer: transformer_tag
+    ProtectionDevice: device_identifier
+    RightOfWayCorridor: corridor_code
+    TransmissionOutage: outage_number
+    GisLocation: name
+    PositionPoint: "Vertex {sequence_number}"
+    LocationAssignment: "{location_role} location"
+    NetworkAssociation: "{association_type}"
+    LinearReference: "at {from_measure} {measure_unit}"
+    NetworkFeature: gis_feature_code
+    OutageEvent: oms_event_code
+    OutageCause: cause_code
+    CustomerInterruption: reference_number
+    OutageCall: "Call {received_timestamp}"
+    OutageCrewDispatch: dispatch_number
+    RestorationAction: action_number
+    StormEvent: storm_name
+    DamageAssessment: assessment_number
+    EtrRevision: "ETR rev {revision_sequence_number}"
+    SafetyClearance: clearance_number
+    SegmentImpact: segment_code
+  # Key properties shown for each node in retriever context, tooltips and path traces (auto when not listed).
+  summary_properties:
+    AssetRegistry: [asset_name, asset_type, asset_condition_rating, failure_risk_category, operational_status]
+    AssetInspection: [inspection_number, inspection_date, inspection_type, defect_severity, pass_fail_status, recommended_action]
+    FailureEvent: [failure_number, failure_timestamp, failure_mode, affected_component, failure_cost_amount]
+    WorkOrder: [work_order_number, work_order_type, work_order_status, actual_completion_timestamp, total_cost]
+    AssetRiskAssessment: [assessment_date, risk_band, overall_risk_score, intervention_priority]
+    Feeder: [feeder_code, feeder_name, customer_count, saidi_ytd_minutes, der_hosting_capacity_mw, installed_der_capacity_mw]
+    DistributionSubstation: [substation_name, substation_code, rated_capacity_mva]
+    TransmissionSubstation: [substation_name, primary_voltage_kv, secondary_voltage_kv]
+    DistributionTransformer: [adms_device_code, kva_rating, customers_served_count, condition_rating]
+    SectionalizingDevice: [device_number, device_type, normal_position]
+    NetworkSegment: [segment_code, segment_type, customer_count]
+    DerInterconnectionPoint: [poi_number, der_type, nameplate_capacity_kw]
+    TransmissionLine: [line_code, line_name, voltage_kv, length_km]
+    PowerTransformer: [transformer_tag, mva_rating, health_index]
+    OutageEvent: [oms_event_code, event_type, cause_code, detection_timestamp, actual_restoration_timestamp, customers_affected_count, customer_minutes_interrupted]
+    RestorationAction: [action_number, action_sequence, action_type, action_timestamp, customers_restored_count]
+    EtrRevision: [revision_sequence_number, revision_timestamp, revised_etr, revision_reason_code]
+    StormEvent: [storm_number, storm_name, declared_start_time, declared_end_time]
+    SafetyClearance: [clearance_number, clearance_purpose, issued_timestamp, released_timestamp]
+    DistributionSwitchingStep: [step_sequence_number, operation_type, actual_state_after, step_status]
+    GeographicalRegion: [name, region_kind, region_code]
+    NetworkFeature: [gis_feature_code, feature_class, asset_group, canonical_entity_table, canonical_entity_id]
+    TransmissionOutage: [outage_number, outage_type, cause_code, start_timestamp, duration_hours]
+
+# -----------------------------------------------------------------------------
+# GIS: WGS84 point property on every located node + GeoSPARQL-style spatial relations
+# -----------------------------------------------------------------------------
+gis:
+  enabled: true
+  point_property: geo_point                 # Neo4j point({latitude, longitude}); used by point.distance()
+  lat_lon_columns: [[latitude, longitude], [site_latitude, site_longitude], [fault_latitude, fault_longitude]]
+  location_fk_columns: [gis_location_id, location_id, route_location_id]   # fall back to the referenced location's point
+  location_table: gis.location
+  location_lat_lon: [latitude, longitude]
+  location_wkt: geometry_wkt
+  spatial_relationships:
+    region_table: gis.geographical_region
+    region_location_column: location_id
+    region_kinds: [sub_geographical_region, storm_zone, service_territory]
+    within_type: SF_WITHIN                  # every vertex of the entity geometry inside the region polygon
+    intersects_type: SF_INTERSECTS          # some but not all of a line/polygon inside (GeoSPARQL sfIntersects)
+    source_tables: [distribution.feeder, distribution.network_segment, distribution.transformer, distribution.sectionalizing_device,
+                    distribution.distribution_substation, distribution.der_interconnection_point, distribution.capacitor_bank,
+                    transmission.line, transmission.transmission_substation, transmission.power_transformer,
+                    transmission.right_of_way_corridor, outage.event, outage.damage_assessment, asset.inspection]
+
+# -----------------------------------------------------------------------------
+# Data validation (read-only checks on the input data)
+# -----------------------------------------------------------------------------
+validation:
+  fail_on: [pk_duplicates, fk_orphans, not_null]   # also available: enum, pattern, coordinates
+  coordinate_columns: [[latitude, longitude], [site_latitude, site_longitude], [fault_latitude, fault_longitude]]
+
+# -----------------------------------------------------------------------------
+# Unstructured path: narrative columns become Documents/Chunks (+ embeddings).
+#  mode: embed   - chunks + embeddings only (fast; enables vector/hybrid retrievers)
+#        extract - also LLM entity/relation extraction constrained by the schema below
+#        off     - no narrative documents
+# -----------------------------------------------------------------------------
+extraction:
+  mode: embed
+  chunk_size: 1200
+  chunk_overlap: 100
+  max_documents: 0            # 0 = all
+  concurrency: 4
+  narrative_columns:          # "auto" = long free-text STRING columns
+    asset.inspection: [defect_description, notes]
+    asset.failure_event: [failure_cause_description, root_cause_analysis_findings, repair_action_taken, corrective_action_plan]
+    asset.work_order: [work_order_description, closure_notes]
+    asset.asset_risk_assessment: [assessment_notes, recommended_intervention]
+    asset.maintenance_plan: [plan_description]
+    outage.event: [cause_description]
+    outage.damage_assessment: [damage_description]
+    outage.outage_crew_dispatch: [field_crew_notes]
+    outage.restoration_action: [action_notes]
+    outage.etr_revision: [revision_reason_description]
+    outage.safety_clearance: [isolation_point_description, grounds_location_description, hazard_notes]
+    outage.storm_event: [storm_notes]
+    transmission.transmission_outage: [cause_description]
+    transmission.right_of_way_corridor: [description]
+    distribution.distribution_reliability_event: [repair_description]
+  entity_types:               # promoted from ontology datatype properties (validated against the ontology)
+    - label: Component
+      from_ontology_properties: [cmm:FailureEvent.affectedComponent]
+    - label: FailureMode
+      from_ontology_properties: [cmm:FailureEvent.failureMode]
+    - label: RootCause
+      from_ontology_properties: [cmm:FailureEvent.rootCauseAnalysisFindings, cmm:FailureEvent.failureCauseDescription]
+    - label: CorrectiveAction
+      from_ontology_properties: [cmm:FailureEvent.repairActionTaken, cmm:FailureEvent.correctiveActionPlan]
+    - label: Defect
+      from_ontology_properties: [cmm:AssetInspection.defectDescription]
+    - label: Hazard
+      from_ontology_properties: [cmm:SafetyClearance.hazardNotes, cmm:DamageAssessment.damageDescription]
+  relationship_types:
+    - {label: AFFECTS, description: "A failure mode, defect or hazard affects a physical component."}
+    - {label: CAUSED_BY, description: "A failure mode, defect or hazard is caused by a root cause."}
+    - {label: ADDRESSES, description: "A corrective action addresses a failure mode, defect, hazard or root cause."}
+    - {label: PRECURSOR_OF, description: "A defect is an early sign of a failure mode."}
+  patterns:
+    - [FailureMode, AFFECTS, Component]
+    - [Defect, AFFECTS, Component]
+    - [Hazard, AFFECTS, Component]
+    - [FailureMode, CAUSED_BY, RootCause]
+    - [Defect, CAUSED_BY, RootCause]
+    - [CorrectiveAction, ADDRESSES, FailureMode]
+    - [CorrectiveAction, ADDRESSES, Defect]
+    - [CorrectiveAction, ADDRESSES, RootCause]
+    - [Defect, PRECURSOR_OF, FailureMode]
+
+indexes:
+  vector:   {name: chunk_embeddings, label: Chunk, property: embedding, similarity: cosine}
+  fulltext: {name: chunk_fulltext, label: Chunk, properties: [text]}
+  narrative_fulltext: {name: row_narratives}
+  point: true                 # POINT index on geo_point for every located label
+
+# -----------------------------------------------------------------------------
+# GraphRAG
+# -----------------------------------------------------------------------------
+rag:
+  questions_file: user_questions/questions.yaml
+  compare_all_retrievers: true
+  top_k: 5
+  llm_params: {temperature: 0}
+  max_context_chars: 12000
+  # Graph expansions after vector/full-text search. Types: neighbourhood | paths | peers.
+  templates:
+    neighbourhood: {type: neighbourhood, limit: 25}
+    event_context: {type: neighbourhood, limit: 70}   # every record attached to an event (actions, ETRs, crews, calls...)
+    causal_chain:
+      type: paths
+      max_hops: 4
+      relationships: [DISTRIBUTION_TRANSFORMER, FEEDER, EVENT, FAILURE_WORK_ORDER, WORK_ORDER, PARENT_WORK_ORDER,
+                      ASSET_REGISTRY, REGISTRY, ISOLATION_DEVICE, STORM_EVENT, SAFETY_CLEARANCE]
+    topology:
+      type: paths
+      max_hops: 4
+      relationships: [FEEDS, FEEDER, FEEDER_DISTRIBUTION_SUBSTATION, TRANSMISSION_SUBSTATION, DER_NETWORK_SEGMENT, ISOLATION_DEVICE]
+    class_peers:
+      type: peers
+      hub_label: AssetClass
+      member_label: AssetRegistry
+      member_hub_rels: [CLASS]
+      source_member_rels: [REGISTRY, ASSET_REGISTRY, REGISTERED_AS]
+      event_rels: [REGISTRY, ASSET_REGISTRY]
+  # Auto routing of free-form questions (regular expressions, case-insensitive).
+  routing:
+    similar: "\\b(similar|resembl\\w*|same kind|pattern|at[- ]risk|looks? like|comparable|warning signs?)\\b"
+    structured: "\\b(how many|count|total|sum|average|most|least|top|worst|all|every|list|which|tree|downstream|upstream|trace|feeds?|hierarch\\w*|roll[- ]?up|each|per|cost|capacity|within|km|distance|saidi|saifi|customers)\\b"
+    causal: "\\b(why|cause\\w*|chain|led to|lead to|early warning|root cause|what happened|followed|precursor)\\b"
+    templates: {similar: class_peers, causal: causal_chain, default: neighbourhood}
+
+output:
+  dir: output
+  build_dir: build            # extracted ontology subset, semantic model, graph schema
+  report: output/report.md
+
+viz:
+  engine: pyvis               # pyvis | neo4j-viz
+  max_nodes: 700
+  include_lexical: false
+  hide_labels: [PositionPoint, Terminal, ConnectivityNode, NetworkAssociation, LocationAssignment, OntologyProperty, CimAttribute]
+  # Colour by subject area (CIM-aligned domain) unless a label has its own colour.
+  domain_colors:
+    asset: "#B279A2"
+    distribution: "#4C78A8"
+    transmission: "#E45756"
+    gis: "#54A24B"
+    outage: "#F58518"
+    semantic: "#9D755D"
+    extracted: "#7F7F7F"
+  colors: {}
+
+ui:
+  host: 127.0.0.1
+  port: 8502
+
+neo4j:
+  create_database_if_missing: true
+
+sanitize:
+  enabled: false              # true = replace vendor/product names (hashed deny-list) in derived files and answers
+  replacement: "[vendor system]"
+  case_insensitive_sha256: [36e26473a4e8b5ce, 990c592cf3275a1b, 653eac173e66849f, 9fe6746863d6b21c, 559054694ada46f5, 60ae5924c474b9d1, baffdf37aa5d3961, 49762afb5c3e8e4b, 2dc010636b9dce91, bb7acca7d7b14ab5, c023b7b07742e120, 3cceb80ddf260944, 5c2e98a082a1eeca, 0e6582c691e4dcfe, 8ac5236b878f13b0, ad11a4cd3709e352, ca6e0dc328e4570d, 59c1de0763e8bdc6, 6eade81e4767c5ae, e697c5113ce58b70, 1a084da1c2190657, 2f5bbecf7ebc1d87, e8e6716fbfad5042, 9fbf261b62c1d7c0, 4d13e1dbe7ab3f90, afd26c84f4d0608e, 3745a86cfe2cda07, 9202af6ce925b26a, 1ab15f7739ff5750, 802ebdcbff5ed6f0, 8ea660cc2dfcefd6, a62ee5ab3e891401, 930b2074c6c0f99b, 1ed3a2df94b35b2a, 3ccbd9105a45d8fc, c5f975b35c72cfe2, 30e363d3e8c59f2c, 271094366bacc4e6, bc236a8abd26671b, 8b8d82f2e92f492d, e7daefb707cc1578, 8cbf04143c8a61c4, adc512f8f55681af, fb5459aea8d2ff04, 6ffd166a9b0fe213, 4e44ddffb6dae607, cc7c38ad0bb548da]
+  case_sensitive_sha256: [e87601989d7d2997, 7c06efd88710f54f, 5a06b98b21528d30, dafc290510d6daa0, 973a4a818d799636, ca19fa5c49677e8e]

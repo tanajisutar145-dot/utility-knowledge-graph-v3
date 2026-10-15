@@ -1,0 +1,91 @@
+# Utility CMM-aligned Canonical Data Model (Silver) v1.0.0 | source: Databricks lakehouse-industry-data-models energy_utilities v1 ECM | generated 2026-10-13
+# Alignment of the CMM GIS model and CIM Location to OGC GeoSPARQL 1.1.
+
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix cim: <http://iec.ch/TC57/CIM100#> .
+@prefix cmm: <http://www.utility-cmm.org/ontology/silver#> .
+@prefix cmmsa: <http://www.utility-cmm.org/ontology/silver/subject-area#> .
+
+
+<http://www.utility-cmm.org/ontology/silver/geosparql-alignment> a owl:Ontology ; owl:imports <http://www.utility-cmm.org/ontology/silver> , <http://www.opengis.net/ont/geosparql> ; owl:versionInfo "1.0.0" .
+
+cmm:GisLocation rdfs:subClassOf geo:Geometry .
+cmm:hasLocation rdfs:subPropertyOf geo:hasDefaultGeometry .
+cmm:GisLocation.geometryWkt rdfs:subPropertyOf geo:asWKT .
+cmm:GisLocation.geometryGeojson rdfs:subPropertyOf geo:asGeoJSON .
+cmm:GeographicalRegion rdfs:subClassOf geo:Feature .
+cmm:NetworkFeature rdfs:subClassOf geo:Feature .
+cmm:ConnectivityNode rdfs:subClassOf geo:Feature .
+cim:PowerSystemResource rdfs:subClassOf geo:Feature .
+cim:Asset rdfs:subClassOf geo:Feature .
+cim:UsagePoint rdfs:subClassOf geo:Feature .
+
+cmm:AssetRegistry rdfs:subClassOf geo:Feature .  # Asset.Location
+cmm:WorkOrder rdfs:subClassOf geo:Feature .  # BaseWork.WorkLocation
+cmm:FailureEvent rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:AssetInspection rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:NercCipAsset rdfs:subClassOf geo:Feature .  # Asset.Location
+cmm:BesFacility rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:PhysicalSecurityPerimeter rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:Premise rdfs:subClassOf geo:Feature .  # Location (is-a; geometry via Location.PositionPoints)
+cmm:PostalAddress rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:DirectLoadControlDevice rdfs:subClassOf geo:Feature .  # Asset.Location
+cmm:Feeder rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:DistributionSubstation rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:DistributionTransformer rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:SectionalizingDevice rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:ServiceDrop rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:NetworkSegment rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:LoadZone rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:CapacitorBank rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:VoltVarDevice rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:DistributionReliabilityEvent rdfs:subClassOf geo:Feature .  # Incident.Location
+cmm:DerInterconnectionPoint rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:ServiceTerritory rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:FixedAsset rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:ForecastZone rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:PricingNode rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:WeatherStation rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:GeneratingUnit rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:PowerPlant rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:ControlArea rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:EmsNode rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:ScadaPoint rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:PmuMeasurement rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:PmuDevice rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:ControlCenter rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:DerSystem rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:PoiSpecification rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:InspectionMilestone rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:Meter rdfs:subClassOf geo:Feature .  # Asset.Location
+cmm:MeterPoint rdfs:subClassOf geo:Feature .  # UsagePoint.UsagePointLocation
+cmm:ServicePoint rdfs:subClassOf geo:Feature .  # UsagePoint.UsagePointLocation
+cmm:OutageEvent rdfs:subClassOf geo:Feature .  # Incident.Location
+cmm:CustomerInterruption rdfs:subClassOf geo:Feature .  # Incident.Location
+cmm:OutageCrewDispatch rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:StormEvent rdfs:subClassOf geo:Feature .  # Incident.Location
+cmm:OutagePrediction rdfs:subClassOf geo:Feature .  # Incident.Location
+cmm:OutageCall rdfs:subClassOf geo:Feature .  # Incident.Location
+cmm:SegmentImpact rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:DamageAssessment rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:DerRegistry rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:BatteryStorageAsset rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:Warehouse rdfs:subClassOf geo:Feature .  # Location (is-a; geometry via Location.PositionPoints)
+cmm:TradingPnode rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:DeliveryPoint rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:TransmissionLine rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:TransmissionSubstation rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:PowerTransformer rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:ProtectionDevice rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:Flowgate rdfs:subClassOf geo:Feature .  # PowerSystemResource.Location
+cmm:TransmissionPnode rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:RightOfWayCorridor rdfs:subClassOf geo:Feature .  # IdentifiedObject -> Location (CMM extension association)
+cmm:SafetyIncident rdfs:subClassOf geo:Feature .  # Incident.Location
+cmm:WorkLocation rdfs:subClassOf geo:Feature .  # Location (is-a; geometry via Location.PositionPoints)

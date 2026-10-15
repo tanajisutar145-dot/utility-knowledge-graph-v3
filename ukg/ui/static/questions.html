@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Question Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="q-page">
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <h1>Question library</h1>
+      <p class="sub">Pick a question; it is sent to the chat in Utility Knowledge Graph Explorer and answered there</p>
+    </div>
+  </div>
+  <label class="q-filter" for="filter">
+    <span class="sr">Filter questions</span>
+    <input id="filter" type="search" placeholder="Filter, e.g. UC4, outage, wildfire, CIM">
+  </label>
+</header>
+<main class="q-main">
+  <p class="q-status" id="q-status" role="status"></p>
+  <section aria-labelledby="h-demo">
+    <h2 id="h-demo" class="q-h">Demo questions <span>one per knowledge-graph use case · with ground truth and a fact check</span></h2>
+    <div class="q-grid" id="demo"></div>
+  </section>
+  <section aria-labelledby="h-sample">
+    <h2 id="h-sample" class="q-h">Recommended questions <span>more ways to explore the graph</span></h2>
+    <div class="q-grid" id="sample"></div>
+  </section>
+</main>
+<script src="/static/common.js"></script>
+<script src="/static/questions.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+# Python 3.10+ (developed on 3.12). Direct dependencies, pinned.
+neo4j-graphrag[openai,anthropic,ollama]==1.21.0
+neo4j==6.3.1
+openai==3.19.2
+anthropic==1.8.0
+ollama==0.4.9
+rdflib==7.6.0
+PyYAML==6.0.3
+python-dotenv==1.2.3
+pyvis==0.3.2
+neo4j-viz==1.9.0
+fastapi==0.141.1
+uvicorn==0.53.0

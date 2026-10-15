@@ -1,0 +1,574 @@
+# Demo questions: one per knowledge-graph use case (docs/01_Utility_KG_Research_and_Use_Cases.md, section 4).
+#
+# Per question:
+#   use_case            UC1..UC10
+#   best_retriever      retriever whose answer is reported (all are run when rag.compare_all_retrievers)
+#   retrieval_template  graph expansion used by vector_cypher / hybrid_cypher (rag.templates in config.yaml)
+#   ground_truth_cypher deterministic answer (no LLM)
+#   must_contain        facts the generated answer should contain (a list = any alternative)
+#   subgraph_cypher     paths shown as the evidence graph (UI) and rendered to output/<id>_subgraph.html
+
+text2cypher_examples:
+  - question: Which equipment does recloser HBR3101-R1 feed, at any depth, and how many customers are behind it?
+    cypher: |
+      MATCH (d:SectionalizingDevice {device_number: 'HBR3101-R1'})-[:FEEDS*1..10]->(x)
+      WITH collect(DISTINCT x) AS down
+      RETURN [x IN down | x.caption] AS equipment, reduce(s = 0, x IN down | s + coalesce(x.customers_served_count, 0)) AS customers
+  - question: Which feeders are supplied from Lakeview 230kV Substation?
+    cypher: |
+      MATCH (ts:TransmissionSubstation {substation_code: 'LKV'})<-[:TRANSMISSION_SUBSTATION]-(ds:DistributionSubstation)
+            <-[:FEEDER_DISTRIBUTION_SUBSTATION]-(f:Feeder)
+      RETURN ds.substation_name AS substation, f.feeder_code AS feeder, f.customer_count AS customers
+  - question: List the restoration actions of outage OE-2025-0204 in order.
+    cypher: |
+      MATCH (a:RestorationAction)-[:EVENT]->(e:OutageEvent {oms_event_code: 'OE-2025-0204'})
+      RETURN a.action_sequence AS step, a.action_type AS action, a.action_timestamp AS at, a.customers_restored_count AS restored
+      ORDER BY step
+  - question: Which distribution substations lie inside the Foothill Wildland HFTD Tier 2?
+    cypher: |
+      MATCH (x:DistributionSubstation)-[:SF_WITHIN]->(g:GeographicalRegion {region_code: 'HFTD-T2-FW'})
+      RETURN x.substation_name AS substation
+  - question: Which distribution transformers are within 1 km of latitude 38.75, longitude -121.33?
+    cypher: |
+      WITH point({latitude: 38.75, longitude: -121.33}) AS p
+      MATCH (x:DistributionTransformer) WHERE point.distance(x.geo_point, p) < 1000
+      RETURN x.adms_device_code AS transformer, round(point.distance(x.geo_point, p)) AS metres ORDER BY metres
+  - question: How many records specialise the CIM class PowerTransformer, per table?
+    cypher: |
+      MATCH (n:CIM_PowerTransformer) RETURN n.source_table AS table, n.cim_class AS cim_class, count(*) AS records
+  - question: Which CIM attribute does the feeder column nominal_voltage_kv map to, and in which unit?
+    cypher: |
+      MATCH (:OntologyClass {name: 'Feeder'})-[:HAS_PROPERTY]->(p:OntologyProperty {column: 'nominal_voltage_kv'})-[m:MAPS_TO]->(a:CimAttribute)
+      RETURN p.column AS column, a.name AS cim_attribute, m.match AS match, p.unit AS unit
+  - question: Show the work-order tree under WO-2025011501 with the level and cost of each order.
+    cypher: |
+      MATCH path = (root:WorkOrder {work_order_number: 'WO-2025011501'})<-[:PARENT_WORK_ORDER*0..]-(w:WorkOrder)
+      RETURN w.work_order_number AS work_order, length(path) + 1 AS level, w.total_cost AS cost ORDER BY level
+  - question: Which assets have a critical or high risk band?
+    cypher: |
+      MATCH (ra:AssetRiskAssessment)-[:ASSET_REGISTRY]->(a:AssetRegistry) WHERE ra.risk_band IN ['critical', 'high']
+      RETURN a.asset_name AS asset, ra.risk_band AS band, ra.overall_risk_score AS score ORDER BY score DESC
+  - question: How many outage events and customers did Atmospheric River Juniper cause per feeder?
+    cypher: |
+      MATCH (s:StormEvent {storm_name: 'Atmospheric River Juniper'})<-[:STORM_EVENT]-(e:OutageEvent)-[:FEEDER]->(f:Feeder)
+      RETURN f.feeder_code AS feeder, count(e) AS events, sum(e.customers_affected_count) AS customers
+  - question: Which GIS network feature represents recloser HBR3101-R1?
+    cypher: |
+      MATCH (nf:NetworkFeature)-[:REPRESENTS]->(d:SectionalizingDevice {device_number: 'HBR3101-R1'})
+      RETURN nf.gis_feature_code AS feature, nf.feature_class AS feature_class, nf.esri_global_id AS global_id
+
+questions:
+  - id: Q1
+    use_case: "UC1 Network topology and connectivity tracing"
+    title: Downstream trace from a recloser
+    question: >
+      If recloser PRD1201-R1 locks out, which network segments, distribution transformers, DER interconnection points and
+      switching devices downstream of it lose supply, how many customers would be interrupted, and which normally-open tie
+      switch could pick up part of the load?
+    pattern: "Variable-length CIM topology: (:SectionalizingDevice)-[:FEEDS*]->(equipment), derived from Terminal-ConnectivityNode"
+    best_retriever: text2cypher
+    why_best: >
+      Downstream membership is defined by connectivity, not by text: the FEEDS relationships (derived from CIM terminals and
+      connectivity nodes) give the complete set in one variable-length traversal; similarity search would only return a few chunks.
+    retrieval_template: topology
+    ground_truth_cypher: |
+      MATCH (r:SectionalizingDevice {device_number: 'PRD1201-R1'})-[:FEEDS*1..10]->(x)
+      WITH collect(DISTINCT x) AS down
+      RETURN [x IN down WHERE x:NetworkSegment | x.segment_code] AS segments,
+             [x IN down WHERE x:DistributionTransformer | x.adms_device_code] AS transformers,
+             [x IN down WHERE x:DerInterconnectionPoint | x.poi_number + ' ' + x.der_type] AS der_points,
+             [x IN down WHERE x:SectionalizingDevice | x.device_number + ' (normally ' + x.normal_position + ')'] AS devices,
+             reduce(s = 0, x IN down | s + coalesce(x.customers_served_count, 0)) AS customers_interrupted
+    expected_answer: >
+      Segments PRD1201S02, PRD1201S03 and lateral PRD1201S04; transformers PRD1201-T02, T03, T04, T05 and T06; DER points
+      POI-PRD1201-01 (solar PV) and POI-PRD1201-02 (battery storage); devices PRD1201-D1 (in-line disconnect), PRD1201-F1
+      (lateral fuse), capacitor bank PRD1201-C1 and the normally-open tie switch PRD1201-TIE to feeder PRD1202. 141 customers
+      would be interrupted (PRD1201-T01 stays on, it is upstream of R1).
+    must_contain:
+      - PRD1201-T02
+      - PRD1201-T06
+      - PRD1201S03
+      - POI-PRD1201-02
+      - PRD1201-TIE
+      - "141"
+    subgraph_cypher: |
+      MATCH p = (r:SectionalizingDevice {device_number: 'PRD1201-R1'})-[:FEEDS*1..10]->(x)
+      OPTIONAL MATCH f = (r)-[:FEEDER]->(:Feeder)
+      OPTIONAL MATCH q = (:SectionalizingDevice {device_number: 'PRD1201-TIE'})<-[:CONDUCTING_EQUIPMENT]-(:Terminal {sequence_number: 2})
+                         -[:CONNECTIVITY_NODE]->(:ConnectivityNode)-[:MEMBER_OF]->(:Feeder)
+      RETURN p, f, q
+
+  - id: Q2
+    use_case: "UC2 Outage impact and restoration analysis"
+    title: Cause, impact and restoration of a storm outage
+    question: >
+      For outage OE-2025-0115, what caused it, which device isolated it, how many customers were affected, which restoration
+      actions were taken and in what order, and how did the estimated restoration time change?
+    pattern: "Star around an Outage: isolation device, storm, restoration actions (ordered), ETR revisions, crews, damage"
+    best_retriever: hybrid_cypher
+    why_best: >
+      The event id is an exact keyword (full-text) and the narrative explains the cause (vector); the wide neighbourhood expansion
+      then brings every record attached to the outage - restoration actions with sequence and time, ETR revisions, crews and
+      damage assessments - into one context.
+    retrieval_template: event_context
+    ground_truth_cypher: |
+      MATCH (e:OutageEvent {oms_event_code: 'OE-2025-0115'})-[:ISOLATION_DEVICE]->(d:SectionalizingDevice)
+      OPTIONAL MATCH (e)-[:STORM_EVENT]->(s:StormEvent)
+      RETURN e.cause_code AS cause, e.cause_description AS description, d.device_number AS isolated_by, s.storm_name AS storm,
+             e.customers_affected_count AS customers, e.customer_minutes_interrupted AS customer_minutes,
+             COLLECT { MATCH (a:RestorationAction)-[:EVENT]->(e) OPTIONAL MATCH (a)-[:SECTIONALIZING_DEVICE]->(x)
+                       RETURN toString(a.action_sequence) + '. ' + a.action_type + ' ' + toString(a.action_timestamp) +
+                              coalesce(' ' + x.device_number, '') + ' restored ' + toString(a.customers_restored_count)
+                       ORDER BY a.action_sequence } AS actions,
+             COLLECT { MATCH (r:EtrRevision)-[:EVENT]->(e)
+                       RETURN toString(r.revised_etr) + ' (' + r.revision_reason_code + ')' ORDER BY r.revision_sequence_number } AS etr_history,
+             e.actual_restoration_timestamp AS restored_at
+    expected_answer: >
+      Cause VEG: a valley oak limb broke under wet snow and wind during Winter Storm Kestrel and fell across mainline section 2;
+      recloser PRD1201-R1 locked out at 03:42 on 15 Jan 2025, interrupting 141 customers (70,173 customer-minutes). Actions:
+      1 isolation (R1 lockout, 03:42), 2 sectionalizing (open in-line disconnect PRD1201-D1, 05:55), 3 load transfer (close tie
+      PRD1201-TIE to PRD1202, 06:20, 48 customers restored), 4 permanent repair (08:30-14:40), 5 close R1 and return to normal
+      (14:55, 93 customers restored). ETR: 08:00 (initial) -> 12:00 (crew assessment) -> 16:00 (resource delay) -> 15:05 (final).
+    must_contain:
+      - PRD1201-R1
+      - "141"
+      - [vegetation, VEG, oak, tree]
+      - [PRD1201-TIE, tie switch, load transfer, load_transfer]
+      - [PRD1201-D1, disconnect]
+      - ["16:00"]
+    subgraph_cypher: |
+      MATCH (e:OutageEvent {oms_event_code: 'OE-2025-0115'})
+      OPTIONAL MATCH p1 = (e)-[:ISOLATION_DEVICE|STORM_EVENT|FEEDER|WORK_ORDER]->()
+      OPTIONAL MATCH p2 = (e)<-[:EVENT]-(x) WHERE x:RestorationAction OR x:EtrRevision OR x:DamageAssessment OR x:OutageCrewDispatch
+      OPTIONAL MATCH p3 = (e)<-[:EVENT]-(:RestorationAction)-[:SECTIONALIZING_DEVICE]->()
+      RETURN p1, p2, p3
+
+  - id: Q3
+    use_case: "UC3 Asset health, risk and predictive maintenance"
+    title: Inspection finding that preceded a transformer failure
+    question: >
+      Which distribution transformer failures were preceded by an inspection that had already flagged the problem? For each,
+      give the inspection and its finding, the failure, the outage it caused, and the work-order tree that followed with its
+      total cost.
+    pattern: "Causal chain: AssetInspection -> DistributionTransformer <- FailureEvent -> OutageEvent, FailureEvent -> WorkOrder tree"
+    best_retriever: vector_cypher
+    why_best: >
+      The failure's root-cause narrative names the precursor ("hotspot and oil leak found by infrared inspection"), so vector
+      search finds it; the causal_chain expansion then walks DISTRIBUTION_TRANSFORMER / EVENT / FAILURE_WORK_ORDER /
+      PARENT_WORK_ORDER and hands the LLM the explicit path, which no single chunk contains.
+    retrieval_template: causal_chain
+    ground_truth_cypher: |
+      MATCH (i:AssetInspection)-[:DISTRIBUTION_TRANSFORMER]->(x:DistributionTransformer)<-[:DISTRIBUTION_TRANSFORMER]-(f:FailureEvent)
+      WHERE i.inspection_date < date(f.failure_timestamp) AND i.pass_fail_status IN ['fail', 'marginal']
+      OPTIONAL MATCH (f)-[:EVENT]->(e:OutageEvent)
+      OPTIONAL MATCH (f)-[:FAILURE_WORK_ORDER]->(root:WorkOrder)
+      OPTIONAL MATCH (root)<-[:PARENT_WORK_ORDER*0..]-(w:WorkOrder)
+      WITH i, x, f, e, root, collect(DISTINCT w) AS tree
+      RETURN x.adms_device_code AS transformer, i.inspection_number AS inspection, i.inspection_date AS inspected_on,
+             i.defect_description AS finding, f.failure_number AS failure, f.failure_timestamp AS failed_at,
+             e.oms_event_code AS outage, e.customers_affected_count AS customers, root.work_order_number AS root_work_order,
+             size(tree) AS work_orders, reduce(c = 0.0, w IN tree | c + w.total_cost) AS tree_cost
+    expected_answer: >
+      One chain: transformer CFL2101-T04 - infrared inspection INS-2024-DT-0412 (18 Nov 2024: 41 C rise at the H1 bushing
+      connection and weeping oil, loaded to 92%; replacement WO-2024112001 deferred) - failure FE-2025-0012 (2 Mar 2025,
+      insulation) - outage OE-2025-0311 (54 customers) - work-order tree rooted at WO-2025030211 with 4 orders
+      (WO-2025030212 oil spill, WO-2025030213 cutout, WO-2025030214 environmental closure) costing USD 27,000.
+    must_contain:
+      - CFL2101-T04
+      - INS-2024-DT-0412
+      - FE-2025-0012
+      - OE-2025-0311
+      - WO-2025030211
+      - ["27,000", "27000"]
+    subgraph_cypher: |
+      MATCH p = (i:AssetInspection {inspection_number: 'INS-2024-DT-0412'})-[:DISTRIBUTION_TRANSFORMER]->(:DistributionTransformer)
+                <-[:DISTRIBUTION_TRANSFORMER]-(f:FailureEvent)-[:EVENT]->(:OutageEvent)
+      OPTIONAL MATCH q = (f)-[:FAILURE_WORK_ORDER]->(:WorkOrder)<-[:PARENT_WORK_ORDER*0..]-(:WorkOrder)
+      OPTIONAL MATCH r = (i)-[:WORK_ORDER]->(:WorkOrder)
+      RETURN p, q, r
+
+  - id: Q4
+    use_case: "UC4 Wildfire and vegetation risk"
+    title: Lines and feeders in the Tier 3 High Fire Threat District
+    question: >
+      Which transmission lines and distribution feeders lie inside or cross the Tier 3 High Fire Threat District (Granite Ridge),
+      and which of them had a failed vegetation inspection or a vegetation-caused outage?
+    pattern: "Spatial (GeoSPARQL sfWithin / sfIntersects on WGS84 geometry) + asset and outage history"
+    best_retriever: text2cypher
+    why_best: >
+      Membership in the fire district is a geometric relation computed at load time (SF_WITHIN / SF_INTERSECTS); combining it with
+      inspection and outage history is an exact, complete set - a structured query, not a similarity search.
+    retrieval_template: neighbourhood
+    ground_truth_cypher: |
+      MATCH (g:GeographicalRegion {region_code: 'HFTD-T3-GR'})<-[s:SF_WITHIN|SF_INTERSECTS]-(a)
+      WHERE a:TransmissionLine OR a:Feeder
+      RETURN a.source_table AS asset_type, a.caption AS asset, type(s) AS relation,
+             COLLECT { MATCH (i:AssetInspection)-[:TRANSMISSION_LINE|FEEDER]->(a)
+                       WHERE i.inspection_type = 'vegetation_patrol' AND i.pass_fail_status = 'fail' RETURN i.inspection_number } AS vegetation_findings,
+             COLLECT { MATCH (o:OutageEvent)-[:FEEDER]->(a) WHERE o.cause_code = 'VEG' RETURN o.oms_event_code } +
+             COLLECT { MATCH (o:TransmissionOutage)-[:REGISTRY]->(:AssetRegistry)<-[:REGISTRY]-(a) WHERE o.cause_code = 'VEG'
+                       RETURN o.outage_number } AS vegetation_outages
+      ORDER BY asset_type, asset
+    expected_answer: >
+      Transmission lines GPK-LKV-230-1 and GPK-OKH-115-1 cross the district (SF_INTERSECTS); feeders PRD1201 and PRD1202 lie
+      inside it (SF_WITHIN). Vegetation history: GPK-LKV-230-1 - finding INS-2025-VG-0118 and outage TO-2025-0003;
+      GPK-OKH-115-1 - finding INS-2025-VG-0121; PRD1201 - finding INS-2024-VG-1210 and outage OE-2025-0115; PRD1202 - outage
+      OE-2025-0120.
+    must_contain:
+      - GPK-LKV-230-1
+      - GPK-OKH-115-1
+      - PRD1201
+      - PRD1202
+      - INS-2024-VG-1210
+      - TO-2025-0003
+    subgraph_cypher: |
+      MATCH p = (g:GeographicalRegion {region_code: 'HFTD-T3-GR'})<-[:SF_WITHIN|SF_INTERSECTS]-(a)
+      WHERE a:TransmissionLine OR a:Feeder
+      OPTIONAL MATCH q = (a)<-[:TRANSMISSION_LINE|FEEDER]-(i:AssetInspection) WHERE i.inspection_type = 'vegetation_patrol' AND i.pass_fail_status = 'fail'
+      OPTIONAL MATCH r = (a)<-[:FEEDER]-(o:OutageEvent {cause_code: 'VEG'})
+      RETURN p, q, r
+
+  - id: Q5
+    use_case: "UC5 Transmission-distribution interface and contingency impact"
+    title: What depends on a transmission substation
+    question: >
+      If Granite Peak 230kV Substation were lost, which distribution substations and feeders would lose their transmission source,
+      how many customers do they serve, and which Granite Peak power transformer is at critical risk?
+    pattern: "Cross-domain fan-out: TransmissionSubstation <- DistributionSubstation <- Feeder, plus PowerTransformer -> AssetRegistry <- AssetRiskAssessment"
+    best_retriever: text2cypher
+    why_best: >
+      The dependency is pure structure across two subject areas (transmission -> distribution) plus an aggregation; one traversal
+      answers it exactly.
+    retrieval_template: topology
+    ground_truth_cypher: |
+      MATCH (ts:TransmissionSubstation {substation_code: 'GPK'})<-[:TRANSMISSION_SUBSTATION]-(ds:DistributionSubstation)
+            <-[:FEEDER_DISTRIBUTION_SUBSTATION]-(f:Feeder)
+      WITH ts, ds, collect(f.feeder_code) AS feeders, sum(f.customer_count) AS customers
+      RETURN ts.substation_name AS transmission_substation, ds.substation_name AS distribution_substation, feeders, customers,
+             COLLECT { MATCH (pt:PowerTransformer)-[:TRANSMISSION_SUBSTATION]->(ts)
+                       MATCH (pt)-[:REGISTRY]->(:AssetRegistry)<-[:ASSET_REGISTRY]-(ra:AssetRiskAssessment) WHERE ra.risk_band = 'critical'
+                       RETURN pt.transformer_tag + ' (score ' + toString(ra.overall_risk_score) + ')' } AS critical_transformers
+    expected_answer: >
+      Pine Ridge Substation (feeders PRD1201, PRD1202; 297 customers) and Cedar Flat Substation (CFL2101, CFL2102; 249 customers)
+      - 546 customers in total. Granite Peak T2 (GPKT2PT01, 230/115 kV) is at critical risk (score 71.8) after its DGA acetylene
+      trend; replacement planning is under WO-2025062301.
+    must_contain:
+      - Pine Ridge
+      - Cedar Flat
+      - PRD1201
+      - CFL2102
+      - ["546", "297", "249"]
+      - GPKT2PT01
+    subgraph_cypher: |
+      MATCH p = (ts:TransmissionSubstation {substation_code: 'GPK'})<-[:TRANSMISSION_SUBSTATION]-(:DistributionSubstation)
+                <-[:FEEDER_DISTRIBUTION_SUBSTATION]-(:Feeder)
+      OPTIONAL MATCH q = (ts)<-[:TRANSMISSION_SUBSTATION]-(:PowerTransformer)-[:REGISTRY]->(:AssetRegistry)<-[:ASSET_REGISTRY]-(:AssetRiskAssessment {risk_band: 'critical'})
+      RETURN p, q
+
+  - id: Q6
+    use_case: "UC6 Storm and emergency response"
+    title: Storm damage, crews and events
+    question: >
+      For Winter Storm Kestrel, list each outage event with its feeder, cause, customers affected, damage assessments and crews
+      dispatched. Which event caused the most customer-minutes of interruption?
+    pattern: "Aggregation around an Incident: StormEvent <- OutageEvent -> Feeder, OutageEvent <- DamageAssessment / OutageCrewDispatch"
+    best_retriever: text2cypher
+    why_best: The answer is a complete list with counts and a ranking - exact structure, not similarity.
+    retrieval_template: neighbourhood
+    ground_truth_cypher: |
+      MATCH (s:StormEvent {storm_name: 'Winter Storm Kestrel'})<-[:STORM_EVENT]-(e:OutageEvent)-[:FEEDER]->(f:Feeder)
+      RETURN e.oms_event_code AS event, f.feeder_code AS feeder, e.event_type AS type, e.cause_code AS cause,
+             e.customers_affected_count AS customers, e.customer_minutes_interrupted AS customer_minutes,
+             COLLECT { MATCH (d:DamageAssessment)-[:EVENT]->(e) RETURN d.damage_type + ' (' + d.damage_severity + ')' } AS damage,
+             COLLECT { MATCH (c:OutageCrewDispatch)-[:EVENT]->(e) RETURN c.crew_type } AS crews
+      ORDER BY customer_minutes DESC
+    expected_answer: >
+      Six events: OE-2025-0115 PRD1201 VEG 141 customers (70,173 customer-minutes; tree on line + broken crossarm; troubleshooter,
+      tree and line crews) - the largest; OE-2025-0117 CFL2101 VEG 100; OE-2025-0116 PRD1202 WIND 58; OE-2025-0120 PRD1202 VEG
+      118; OE-2025-0119 QHL6101 WIND 29 (pole down, critical); OE-2025-0118 CFL2102 momentary WIND 137.
+    must_contain:
+      - OE-2025-0115
+      - OE-2025-0116
+      - OE-2025-0117
+      - OE-2025-0118
+      - OE-2025-0119
+      - OE-2025-0120
+    subgraph_cypher: |
+      MATCH p = (s:StormEvent {storm_name: 'Winter Storm Kestrel'})<-[:STORM_EVENT]-(e:OutageEvent)-[:FEEDER]->(:Feeder)
+      OPTIONAL MATCH q = (e)<-[:EVENT]-(:DamageAssessment)
+      RETURN p, q
+
+  - id: Q7
+    use_case: "UC7 DER hosting capacity and connection quotes"
+    title: Where can a 2 MW solar farm connect?
+    question: >
+      A developer wants to connect a 2 MW solar farm at latitude 38.62, longitude -120.99. Which feeders have equipment within
+      8 km of that site and at least 2 MW of remaining DER hosting capacity? Give the distance, the headroom and the source
+      substation of each.
+    pattern: "Spatial distance (point.distance on WGS84 points) + capacity arithmetic + topology"
+    best_retriever: text2cypher
+    why_best: Distance and headroom are computed values over every feeder; only a query can evaluate them completely.
+    retrieval_template: topology
+    ground_truth_cypher: |
+      WITH point({latitude: 38.62, longitude: -120.99}) AS site
+      MATCH (f:Feeder)<-[:FEEDER]-(x)
+      WHERE x.geo_point IS NOT NULL AND (x:DistributionTransformer OR x:NetworkSegment OR x:SectionalizingDevice)
+      WITH f, site, min(point.distance(x.geo_point, site)) AS d
+      WHERE d <= 8000 AND f.der_hosting_capacity_mw - f.installed_der_capacity_mw >= 2.0
+      MATCH (f)-[:FEEDER_DISTRIBUTION_SUBSTATION]->(ds:DistributionSubstation)
+      RETURN f.feeder_code AS feeder, round(d / 1000.0, 2) AS km, round(f.der_hosting_capacity_mw - f.installed_der_capacity_mw, 2) AS headroom_mw,
+             ds.substation_name AS substation
+      ORDER BY km
+    expected_answer: >
+      Two feeders, both from Willow Bend Substation: WLB5101 (about 4.9 km, 4.05 MW headroom) and WLB5102 (about 5.1 km,
+      5.70 MW headroom). Quarry Hill QHL6102 (8.7 km) and QHL6101 (10.0 km) have headroom but are farther than 8 km.
+    must_contain:
+      - WLB5101
+      - WLB5102
+      - Willow Bend
+      - ["4.05", "4.1"]
+      - ["5.7"]
+    subgraph_cypher: |
+      WITH point({latitude: 38.62, longitude: -120.99}) AS site
+      MATCH (f:Feeder)<-[:FEEDER]-(x)
+      WHERE x.geo_point IS NOT NULL AND (x:DistributionTransformer OR x:NetworkSegment OR x:SectionalizingDevice)
+      WITH f, site, min(point.distance(x.geo_point, site)) AS d
+      WHERE d <= 8000 AND f.der_hosting_capacity_mw - f.installed_der_capacity_mw >= 2.0
+      MATCH p = (f)-[:FEEDER_DISTRIBUTION_SUBSTATION]->(:DistributionSubstation)
+      OPTIONAL MATCH q = (f)<-[:FEEDER]-(:DerInterconnectionPoint)
+      RETURN p, q
+
+  - id: Q8
+    use_case: "UC8 Reliability and regulatory reporting"
+    title: Worst-performing feeders by SAIDI (IEEE 1366)
+    question: >
+      Rank the feeders by 2025 SAIDI from sustained interruptions, both including and excluding Major Event Days (IEEE 1366).
+      Which feeders are worst in each case and which causes drove them?
+    pattern: "Roll-up of DistributionReliabilityEvent to Feeder with an IEEE 1366 major-event-day exclusion"
+    best_retriever: text2cypher
+    why_best: SAIDI is an aggregate over all sustained events divided by customers served; it has to be computed.
+    retrieval_template: neighbourhood
+    ground_truth_cypher: |
+      MATCH (f:Feeder)
+      OPTIONAL MATCH (r:DistributionReliabilityEvent)-[:FEEDER]->(f)
+      WHERE r.event_type = 'sustained' AND r.event_start_timestamp >= localdatetime('2025-01-01T00:00:00')
+      WITH f, sum(coalesce(r.customer_minutes_interrupted, 0.0)) AS cmi_all,
+           sum(CASE WHEN r.major_event_day_flag THEN 0.0 ELSE coalesce(r.customer_minutes_interrupted, 0.0) END) AS cmi_excl_med,
+           collect(r.cause_code) AS causes
+      RETURN f.feeder_code AS feeder, f.customer_count AS customers, round(cmi_all / f.customer_count, 1) AS saidi_all_min,
+             round(cmi_excl_med / f.customer_count, 1) AS saidi_excl_med_min, causes
+      ORDER BY saidi_all_min DESC
+    expected_answer: >
+      Including Major Event Days the worst are CFL2101 (551.6 min; VEG storm outage + transformer failure), PRD1201 (452.7; VEG)
+      and PRD1202 (365.4; WIND, VEG) - all driven by Winter Storm Kestrel. Excluding MED the ranking changes: MLC4101 (222.4;
+      VEG in Atmospheric River Juniper), CFL2101 (214.1; EQUIP_XFMR), WLB5102 (183.9; FLOOD) and WLB5101 (179.8); PRD1201 and
+      PRD1202 drop to 0.
+    must_contain:
+      - CFL2101
+      - PRD1201
+      - MLC4101
+      - ["551.6", "552"]
+      - ["222.4", "222"]
+    subgraph_cypher: |
+      MATCH p = (r:DistributionReliabilityEvent)-[:FEEDER]->(f:Feeder)
+      WHERE f.feeder_code IN ['CFL2101', 'PRD1201', 'MLC4101'] AND r.event_type = 'sustained'
+      OPTIONAL MATCH q = (r)-[:STORM_EVENT]->(:StormEvent)
+      RETURN p, q
+
+  - id: Q9
+    use_case: "UC9 GIS-asset data quality and identity reconciliation"
+    title: GIS features and assets that do not reconcile
+    question: >
+      Which GIS network features have no matching canonical record, which have an mRID that disagrees with the record they
+      represent, and which distribution transformers have no GIS location, no asset-registry record, or coordinates more than
+      500 m away from their GIS location?
+    pattern: "Anti-joins over polymorphic links (REPRESENTS), identity links (REGISTERED_AS) and spatial comparison"
+    best_retriever: text2cypher
+    why_best: Missing relationships cannot be found by similarity; they are anti-joins across systems (GIS vs EAM vs network).
+    retrieval_template: neighbourhood
+    ground_truth_cypher: |
+      MATCH (nf:NetworkFeature) WHERE nf.canonical_entity_table IS NOT NULL AND NOT (nf)-[:REPRESENTS]->()
+      RETURN 'GIS feature without canonical record' AS issue, nf.gis_feature_code AS item,
+             nf.canonical_entity_table + ':' + toString(nf.canonical_entity_id) AS detail
+      UNION
+      MATCH (nf:NetworkFeature)-[:REPRESENTS]->(e) WHERE nf.canonical_entity_mrid <> e.mrid
+      RETURN 'mRID mismatch' AS issue, nf.gis_feature_code AS item, e.caption AS detail
+      UNION
+      MATCH (x:DistributionTransformer) WHERE NOT (x)-[:HAS_LOCATION]->()
+      RETURN 'transformer without GIS location' AS issue, x.adms_device_code AS item, '' AS detail
+      UNION
+      MATCH (x:DistributionTransformer) WHERE NOT (x)-[:REGISTERED_AS]->()
+      RETURN 'transformer without asset-registry record' AS issue, x.adms_device_code AS item, x.asset_tag AS detail
+      UNION
+      MATCH (x:DistributionTransformer)-[:HAS_LOCATION]->(l:GisLocation)
+      WITH x, point.distance(point({latitude: x.latitude, longitude: x.longitude}), l.geo_point) AS d WHERE d > 500
+      RETURN 'coordinates > 500 m from GIS location' AS issue, x.adms_device_code AS item, toString(round(d)) + ' m' AS detail
+    expected_answer: >
+      Features without a canonical record: UN-PRD1202-T07, UN-HBR3102-T08 (transformers 990001/990002) and UN-QHL6102-R2
+      (recloser 990003). mRID mismatches: UN-XFMR-MLC4101-T02 and UN-DEV-WLB5101-F1. Transformers without a GIS location:
+      CFL2102-T05 and HBR3101-T06. Without an asset-registry record: MLC4102-T04 and WLB5102-T02. Coordinates about 1.2 km from
+      the GIS location: QHL6101-T03.
+    must_contain:
+      - UN-PRD1202-T07
+      - UN-QHL6102-R2
+      - MLC4101-T02
+      - CFL2102-T05
+      - WLB5102-T02
+      - QHL6101-T03
+    subgraph_cypher: |
+      MATCH (nf:NetworkFeature) WHERE nf.canonical_entity_table IS NOT NULL AND NOT (nf)-[:REPRESENTS]->()
+      OPTIONAL MATCH p = (nf)-[:LOCATION]->(:GisLocation)
+      RETURN nf AS n, p
+      UNION
+      MATCH p = (nf:NetworkFeature)-[:REPRESENTS]->(e) WHERE nf.canonical_entity_mrid <> e.mrid
+      RETURN nf AS n, p
+      UNION
+      MATCH (x:DistributionTransformer) WHERE NOT (x)-[:HAS_LOCATION]->() OR NOT (x)-[:REGISTERED_AS]->()
+      OPTIONAL MATCH p = (x)-[:FEEDER]->(:Feeder)
+      RETURN x AS n, p
+
+  - id: Q10
+    use_case: "UC10 Switching and safety-clearance verification"
+    title: Is the work zone of a clearance really isolated?
+    question: >
+      For safety clearance SC-2025-0042, which switching order was executed and which devices did its steps operate, in what
+      sequence? According to the network topology, which devices bound the work-zone segment PRD1201S02, were they all opened
+      and tagged, and is there any DER beyond an untagged boundary device that could back-feed the work zone?
+    pattern: "SwitchingPlan -> SwitchingAction -> ProtectedSwitch, checked against CIM topology (FEEDS) around the work-zone segment"
+    best_retriever: text2cypher
+    why_best: >
+      The check combines the switching record with the electrical topology around the work zone: which devices border the segment
+      (FEEDS in or out) and what lies beyond them. That is a graph query over two sources the clearance document does not join.
+    retrieval_template: topology
+    ground_truth_cypher: |
+      MATCH (s:NetworkSegment {segment_code: 'PRD1201S02'})
+      MATCH (d:SectionalizingDevice) WHERE (d)-[:FEEDS]->(s) OR (s)-[:FEEDS]->(d)
+      OPTIONAL MATCH (st:DistributionSwitchingStep)-[:SECTIONALIZING_DEVICE]->(d)
+      WHERE (st)-[:SAFETY_CLEARANCE]->(:SafetyClearance {clearance_number: 'SC-2025-0042'})
+      WITH s, d, st ORDER BY st.step_sequence_number
+      WITH s, d, collect(toString(st.step_sequence_number) + ':' + st.operation_type + '->' + st.actual_state_after) AS steps
+      RETURN d.device_number AS boundary_device, CASE WHEN (d)-[:FEEDS]->(s) THEN 'upstream' ELSE 'downstream' END AS side,
+             steps, any(x IN steps WHERE x ENDS WITH 'tagged') AS tagged,
+             CASE WHEN (s)-[:FEEDS]->(d)
+                  THEN COLLECT { MATCH (d)-[:FEEDS*1..5]->(g:DerInterconnectionPoint) RETURN g.poi_number + ' ' + g.der_type }
+                  ELSE [] END AS der_beyond
+      ORDER BY side DESC, boundary_device
+    expected_answer: >
+      Switching order DSW-2501150 (9 steps): 1 verify R1 open, 2 tag R1, 3 verify D1 open, 4 tag D1, 5 verify tie switch closed
+      (section 3 carried by PRD1202), 6 untag R1, 7 close R1, 8 open tie, 9 close D1. Topology shows three boundary devices of
+      PRD1201S02: upstream recloser PRD1201-R1 (tagged) and downstream PRD1201-D1 (tagged) and PRD1201-F1 (lateral fuse - never
+      operated or tagged). Beyond F1 sits battery storage POI-PRD1201-02, so lateral 1 is an un-isolated back-feed path that
+      relied only on anti-islanding protection.
+    must_contain:
+      - DSW-2501150
+      - PRD1201-R1
+      - PRD1201-D1
+      - PRD1201-F1
+      - [POI-PRD1201-02, battery]
+    subgraph_cypher: |
+      MATCH p = (sc:SafetyClearance {clearance_number: 'SC-2025-0042'})<-[:SAFETY_CLEARANCE]-(:DistributionSwitchingOrder)
+                <-[:DISTRIBUTION_SWITCHING_ORDER]-(:DistributionSwitchingStep)-[:SECTIONALIZING_DEVICE]->(:SectionalizingDevice)
+      OPTIONAL MATCH q = (:NetworkSegment {segment_code: 'PRD1201S02'})-[:FEEDS]->(:SectionalizingDevice {device_number: 'PRD1201-F1'})-[:FEEDS*1..3]->()
+      OPTIONAL MATCH r = (:SectionalizingDevice {device_number: 'PRD1201-R1'})-[:FEEDS]->(:NetworkSegment {segment_code: 'PRD1201S02'})-[:FEEDS]->(:SectionalizingDevice {device_number: 'PRD1201-D1'})
+      RETURN p, q, r
+
+# Recommended questions: more ways to explore the graph (ground truth optional).
+sample_questions:
+  - id: S1
+    use_case: "UC3 Asset health (class peers)"
+    title: Transformers with the same warning signs
+    question: >
+      Which other distribution transformers of the same asset class as CFL2101-T04 show similar warning signs (hotspots, oil
+      leaks, cracked bushings) and might fail next?
+    pattern: "Class peers: DistributionTransformer -> AssetRegistry -> AssetClass <- AssetRegistry <- AssetInspection"
+    best_retriever: hybrid_cypher
+    why_best: Exact wording (hotspot, oil weep) plus meaning, expanded to assets of the same class with their inspections.
+    retrieval_template: class_peers
+    ground_truth_cypher: |
+      MATCH (x:DistributionTransformer {adms_device_code: 'CFL2101-T04'})-[:REGISTERED_AS]->(me:AssetRegistry)-[:CLASS]->(c:AssetClass)
+            <-[:CLASS]-(peer:AssetRegistry)<-[:REGISTRY]-(i:AssetInspection)
+      WHERE peer <> me AND i.inspection_type = 'thermographic' AND i.pass_fail_status IN ['marginal', 'fail']
+      RETURN c.asset_class_name AS class, peer.asset_name AS asset, i.inspection_number AS inspection, i.defect_description AS finding
+    must_contain: [PRD1201-T03, MLC4102-T05, QHL6101-T02]
+    subgraph_cypher: |
+      MATCH p = (x:DistributionTransformer {adms_device_code: 'CFL2101-T04'})-[:REGISTERED_AS]->(:AssetRegistry)-[:CLASS]->(c:AssetClass)
+                <-[:CLASS]-(peer:AssetRegistry)<-[:REGISTRY]-(i:AssetInspection)
+      WHERE i.inspection_type = 'thermographic'
+      RETURN p
+  - id: S2
+    use_case: "UC2/UC4 Root cause"
+    title: Could the Pine Ridge storm outage have been prevented?
+    question: Explain the root cause of the Pine Ridge 1201 storm outage and whether an earlier finding could have prevented it.
+    pattern: "Causal chain over narratives: FailureEvent -> OutageEvent, AssetInspection -> WorkOrder"
+    best_retriever: vector_cypher
+    why_best: The answer is in narratives (root-cause findings, vegetation patrol), connected through the graph.
+    retrieval_template: causal_chain
+    must_contain: [INS-2024-VG-1210, WO-2024121003]
+  - id: S3
+    use_case: "CIM semantic layer"
+    title: How the distribution classes align to IEC CIM
+    question: Which IEC CIM classes do the distribution subject-area classes specialise, with which match level and CIM package?
+    pattern: "(:OntologyClass)-[:SPECIALIZES]->(:CimClass), (:OntologyClass)-[:IN_SUBJECT_AREA]->(:SubjectArea)"
+    best_retriever: text2cypher
+    why_best: The ontology and its CIM alignment are part of the graph.
+    retrieval_template: neighbourhood
+    ground_truth_cypher: |
+      MATCH (c:OntologyClass)-[:IN_SUBJECT_AREA]->(:SubjectArea {name: 'distribution'})
+      MATCH (c)-[s:SPECIALIZES]->(k:CimClass)
+      RETURN c.name AS ontology_class, k.name AS cim_class, s.match AS match, k.package AS package ORDER BY ontology_class
+    must_contain: [Feeder, PowerTransformer, ProtectedSwitch]
+  - id: S4
+    use_case: "UC3 Asset health"
+    title: Granite Peak T2 dissolved gas trend
+    question: What do the dissolved gas analysis results say about Granite Peak T2 and what has been planned in response?
+    pattern: "Narratives of inspections, risk assessment, maintenance plan and work order around one asset"
+    best_retriever: hybrid_cypher
+    why_best: Narrative question about one asset; hybrid search plus its neighbourhood.
+    retrieval_template: neighbourhood
+    must_contain: [acetylene, MP-GPKT2DGA1]
+  - id: S5
+    use_case: "UC4 Wildfire"
+    title: The PSPS event on Pine Ridge 1202
+    question: What happened during the Public Safety Power Shutoff on feeder Pine Ridge 1202 and how many customers were affected?
+    pattern: "Outage event with its feeder and HFTD region"
+    best_retriever: hybrid_cypher
+    why_best: Keyword (PSPS) plus meaning; neighbourhood adds the feeder and crews.
+    retrieval_template: neighbourhood
+    must_contain: [OE-2025-0702]
+  - id: S6
+    use_case: "UC1/GIS"
+    title: Equipment near a substation
+    question: Which distribution transformers and switching devices are within 2 km of Pine Ridge Substation?
+    pattern: "point.distance between WGS84 points"
+    best_retriever: text2cypher
+    why_best: Distance is computed.
+    retrieval_template: topology
+    ground_truth_cypher: |
+      MATCH (s:DistributionSubstation {substation_code: 'PRD'})
+      MATCH (x) WHERE (x:DistributionTransformer OR x:SectionalizingDevice) AND point.distance(x.geo_point, s.geo_point) < 2000
+      RETURN x.caption AS equipment, round(point.distance(x.geo_point, s.geo_point)) AS metres ORDER BY metres
+  - id: S7
+    use_case: "UC5 Transmission"
+    title: Vegetation outages on transmission lines
+    question: List all transmission outages caused by vegetation, the line, the duration and the storm they were part of.
+    pattern: "TransmissionOutage -> AssetRegistry <- TransmissionLine, TransmissionOutage -> StormEvent"
+    best_retriever: text2cypher
+    why_best: Exact filter and join.
+    retrieval_template: neighbourhood
+    ground_truth_cypher: |
+      MATCH (o:TransmissionOutage {cause_code: 'VEG'})-[:REGISTRY]->(:AssetRegistry)<-[:REGISTRY]-(l:TransmissionLine)
+      OPTIONAL MATCH (o)-[:STORM_EVENT]->(s:StormEvent)
+      RETURN o.outage_number AS outage, l.line_code AS line, o.duration_hours AS hours, s.storm_name AS storm
+    must_contain: [TO-2025-0003, GPK-LKV-230-1]
+  - id: S8
+    use_case: "UC1/UC7 DER"
+    title: DER behind a fuse
+    question: Which DER sites would be isolated if fuse PRD1201-F1 opened, and what is their capacity?
+    pattern: "(:SectionalizingDevice)-[:FEEDS*]->(:DerInterconnectionPoint)"
+    best_retriever: text2cypher
+    why_best: Topology trace.
+    retrieval_template: topology
+    ground_truth_cypher: |
+      MATCH (:SectionalizingDevice {device_number: 'PRD1201-F1'})-[:FEEDS*1..10]->(g:DerInterconnectionPoint)
+      RETURN g.poi_number AS der, g.der_type AS type, g.nameplate_capacity_kw AS kw
+    must_contain: [POI-PRD1201-02]

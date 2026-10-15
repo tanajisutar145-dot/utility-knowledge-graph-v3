@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Utility Knowledge Graph Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/vendor/vis-network.css">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <h1 id="title">Utility Knowledge Graph Explorer</h1>
+      <p class="sub" id="subtitle">CIM-aligned asset, network, GIS and outage knowledge graph</p>
+    </div>
+  </div>
+  <nav class="nav" aria-label="Windows">
+    <a class="ghost" href="/model" target="ukg-model" title="Classes, IEC CIM alignment, column and relationship mappings">Model &amp; CIM ↗</a>
+  </nav>
+  <dl class="status" id="status">
+    <div><dt>LLM</dt><dd id="st-llm">…</dd></div>
+    <div><dt>Embeddings</dt><dd id="st-emb">…</dd></div>
+    <div><dt>Graph</dt><dd id="st-graph">…</dd></div>
+    <div><dt>Standard</dt><dd id="st-std">…</dd></div>
+  </dl>
+</header>
+
+<main class="layout">
+  <section class="pane chat" aria-label="Chat">
+    <div class="thread" id="thread">
+      <div class="msg bot intro">
+        Ask about the network topology, outages and restoration, asset health, wildfire risk, transmission dependencies,
+        storms, DER hosting capacity, reliability, GIS data quality or switching safety. Use <b>Browse questions</b> for one
+        demo question per use case. Each answer shows its evidence graph, with every record's IEC CIM class.
+      </div>
+    </div>
+    <form class="composer" id="composer">
+      <div class="composer-tools">
+        <label for="mode" class="sr">Retriever</label>
+        <select id="mode"></select>
+        <button type="button" class="ghost" id="open-questions" title="Pick a demo or recommended question in a separate window">Browse questions ↗</button>
+      </div>
+      <div class="input-row">
+        <label for="q" class="sr">Question</label>
+        <textarea id="q" rows="2" placeholder="e.g. Which feeders cross the Tier 3 High Fire Threat District?"></textarea>
+        <button type="submit" id="send">Ask</button>
+      </div>
+    </form>
+  </section>
+
+  <div class="work">
+  <section class="pane answer" aria-label="Detailed answer">
+    <div class="pane-head">
+      <h2>Detailed answer</h2>
+      <div class="tabs" id="run-tabs" role="tablist"></div>
+      <div class="trace-launch">
+        <span class="meta" id="trace-status"></span>
+        <button type="button" class="ghost" id="open-trace" title="Open the backend trace in a separate window">How it was checked ↗</button>
+      </div>
+    </div>
+    <div class="pane-body" id="answer">
+      <p class="empty">The full answer to each graph question appears here, with the retriever that produced it and a fact check for the demo questions.</p>
+    </div>
+  </section>
+
+  <section class="pane graph" aria-label="Evidence graph">
+    <div class="pane-head">
+      <h2>Evidence graph</h2>
+      <div class="graph-tools">
+        <div class="seg" role="group" aria-label="Layout">
+          <button type="button" id="lay-net" aria-pressed="true">Network</button>
+          <button type="button" id="lay-geo" aria-pressed="false" title="Place nodes at their WGS84 coordinates">Geo</button>
+        </div>
+        <label title="Add the IEC CIM class of every record as a node"><input type="checkbox" id="cim-layer"> CIM classes</label>
+        <label title="Show relationship types on edges"><input type="checkbox" id="edge-labels" checked> Edge labels</label>
+        <span class="meta" id="graph-meta"></span>
+      </div>
+    </div>
+    <div class="graph-wrap">
+      <div id="network"></div>
+      <div class="legend" id="legend"></div>
+      <div class="node-card" id="node-card" hidden></div>
+    </div>
+  </section>
+  </div>
+</main>
+
+<script src="/vendor/vis-network.min.js"></script>
+<script src="/static/common.js"></script>
+<script src="/static/graph.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

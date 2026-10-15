@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How It Was Checked</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="trace-page">
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <h1>How it was checked</h1>
+      <p class="sub">Backend trace for the latest question in Utility Knowledge Graph Explorer · updates live</p>
+    </div>
+  </div>
+  <div class="trace-tools">
+    <button type="button" class="ghost" id="expand-all">Expand all</button>
+    <button type="button" class="ghost" id="collapse-all">Collapse all</button>
+  </div>
+</header>
+<main class="trace-main">
+  <section class="pane trace-summary" aria-label="Question">
+    <p class="eyebrow">Question</p>
+    <p class="tq" id="tq">No question asked yet. Ask one in the main window; this page follows it automatically.</p>
+    <div class="answer-meta" id="tmeta"></div>
+  </section>
+  <section class="pane trace-full" aria-label="Steps">
+    <ol class="steps" id="steps"></ol>
+  </section>
+</main>
+<script src="/static/common.js"></script>
+<script src="/static/trace.js"></script>
+</body>
+</html>
